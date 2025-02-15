@@ -1,0 +1,11 @@
+.categoriesItem {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #606060;
+}
+
+.selected {
+    color: #00b7ff;
+    text-decoration: underline;
+}
+
