@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, FormEvent, useState } from 'react'
 import classes from './AddTask.module.css'
 import { addTask } from '../../api/http.js'
-import { Input } from 'antd'
+import { Input, Button } from 'antd'
 
 type AddTaskProps = {
     isFetching: boolean
@@ -27,7 +27,6 @@ const AddTask: FC<AddTaskProps> = ({ isFetching, setIsFetching, fetchTasksByCate
     }
 
     const validation = (): boolean => {
-        console.log('enter validation()')
         if (todoTitle.length < 2) {
             setErrorTodo('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2--х.')
             return false
@@ -56,7 +55,6 @@ const AddTask: FC<AddTaskProps> = ({ isFetching, setIsFetching, fetchTasksByCate
     return (
         <form onSubmit={handleSubmit}>
             <div className={classes.container}>
-                <label htmlFor="input-task"></label>
                 <Input
                     type="text"
                     id="input-task"
@@ -71,9 +69,12 @@ const AddTask: FC<AddTaskProps> = ({ isFetching, setIsFetching, fetchTasksByCate
                     className={`${classes.input} ${errorTodo && classes.errorTodo}`}
                 />
 
-                <button className={`${classes.button} ${isFetching && classes.disabled}`} disabled={isFetching}>
+                <Button
+                    className={`${classes.button} ${isFetching && classes.disabled}`}
+                    disabled={isFetching}
+                    htmlType="submit">
                     Add
-                </button>
+                </Button>
             </div>
         </form>
     )
