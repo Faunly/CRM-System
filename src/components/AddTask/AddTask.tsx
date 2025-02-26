@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, FormEvent, useState } from 'react'
 import classes from './AddTask.module.css'
 import { addTask } from '../../api/http.js'
+import { Input } from 'antd'
 
 type AddTaskProps = {
     isFetching: boolean
@@ -10,14 +11,14 @@ type AddTaskProps = {
 
 const AddTask: FC<AddTaskProps> = ({ isFetching, setIsFetching, fetchTasksByCategories }) => {
     const [todoTitle, setTodoTitle] = useState('')
-    const [error, setError] = useState('')
+    const [errorTodo, setErrorTodo] = useState('')
 
     const handleAddTask = async () => {
         try {
             setIsFetching(true)
             await addTask(todoTitle)
         } catch {
-            setError('Ошибка создания задачи!')
+            setErrorTodo('Ошибка создания задачи!')
         } finally {
             setIsFetching(false)
             setTodoTitle('')
@@ -26,47 +27,50 @@ const AddTask: FC<AddTaskProps> = ({ isFetching, setIsFetching, fetchTasksByCate
     }
 
     const validation = (): boolean => {
+        console.log('enter validation()')
         if (todoTitle.length < 2) {
-            setError('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2-х.')
-            return true
-        } else {
+            setErrorTodo('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2--х.')
             return false
+        } else {
+            return true
         }
     }
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        if (!validation()) {
+        if (validation()) {
             handleAddTask()
         }
     }
 
     const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
         setTodoTitle(event.target.value)
+        setErrorTodo('')
     }
 
-    if (error) {
-        alert(error)
-        setError('')
+    if (errorTodo) {
+        alert(errorTodo)
     }
 
     return (
         <form onSubmit={handleSubmit}>
             <div className={classes.container}>
                 <label htmlFor="input-task"></label>
-                <input
+                <Input
                     type="text"
                     id="input-task"
                     placeholder="Task To Be Done..."
                     value={todoTitle}
+                    status={errorTodo && 'error'}
                     onChange={e => {
                         handleChangeInput(e)
                     }}
                     maxLength={64}
                     required
-                    className={`${classes.input} ${error && classes.error}`}
+                    className={`${classes.input} ${errorTodo && classes.errorTodo}`}
                 />
+
                 <button className={`${classes.button} ${isFetching && classes.disabled}`} disabled={isFetching}>
                     Add
                 </button>
