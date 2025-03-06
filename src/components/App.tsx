@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchTasksByCategory } from '../api/http.js'
+import { fetchTasksByCategory, filterTypes } from '../api/http.js'
 
 import classes from '../App.module.css'
 import AddTask from '../components/AddTask/AddTask.tsx'
@@ -13,13 +13,13 @@ const App = () => {
     const [categories, setCategories] = useState<CategoriesType>()
     const [error, setError] = useState('')
     const [isFetching, setIsFetching] = useState(true)
-    const [filter, setFilter] = useState('all')
+    const [filter, setFilter] = useState<filterTypes>('all')
 
     useEffect(() => {
         fetchTasksByCategories('all')
     }, [])
 
-    const fetchTasksByCategories = async (filter: string) => {
+    const fetchTasksByCategories = async (filter: filterTypes) => {
         setIsFetching(true)
         try {
             const todos = await fetchTasksByCategory(filter)

@@ -3,8 +3,8 @@ import classes from './CategoriesItem.module.css'
 
 type CategoriesItemProps = {
     curFilter: string
-    meta: { title: string; filterTitle: string }
-    onChangeFilter: (filterTitle: string) => void
+    meta: { title: string; filterTitle: 'all' | 'inWork' | 'completed' }
+    onChangeFilter: (filterTitle: 'all' | 'inWork' | 'completed') => void
     amount: number
 }
 

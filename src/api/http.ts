@@ -1,4 +1,6 @@
-export const fetchTasksByCategory = async (filter: string) => {
+export type filterTypes = 'all' | 'inWork' | 'completed'
+
+export const fetchTasksByCategory = async (filter: filterTypes) => {
     try {
         const response = await fetch(`https://easydev.club/api/v1/todos?filter=${filter}`)
         return await response.json()
@@ -7,13 +9,13 @@ export const fetchTasksByCategory = async (filter: string) => {
     }
 }
 
-export const addTask = async (filter: string) => {
+export const addTask = async (titleTask: string) => {
     try {
         const response = await fetch('https://easydev.club/api/v1/todos', {
             method: 'POST',
             body: JSON.stringify({
                 isDone: false,
-                title: filter,
+                title: titleTask,
             }),
             headers: {
                 accept: 'application/json',
@@ -26,13 +28,13 @@ export const addTask = async (filter: string) => {
     }
 }
 
-export const changeDataTask = async (id: number, filter: string, isDone: boolean) => {
+export const changeDataTask = async (id: number, titleTask: string, isDone: boolean) => {
     try {
         const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
             method: 'PUT',
             body: JSON.stringify({
                 isDone: isDone,
-                title: filter,
+                title: titleTask,
             }),
             headers: {
                 accept: 'application/json',
