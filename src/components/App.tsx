@@ -10,7 +10,7 @@ import { CategoriesType } from '../types/Categories.ts'
 
 const App = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
-    const [categories, setCategories] = useState<CategoriesType>()
+    const [categories, setCategories] = useState<CategoriesType | undefined>()
     const [error, setError] = useState('')
     const [isFetching, setIsFetching] = useState(true)
     const [filter, setFilter] = useState<filterTypes>('all')

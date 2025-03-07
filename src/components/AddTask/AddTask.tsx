@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FormEvent, useState } from 'react'
+import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react'
 import classes from './AddTask.module.css'
 import { addTask } from '../../api/http.js'
 
@@ -15,40 +15,43 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
         try {
             setIsFetching(true)
             await addTask(todoTitle)
+            fetchTasksByCategories()
         } catch {
             setError('Ошибка создания задачи!')
         } finally {
             setIsFetching(false)
             setTodoTitle('')
-            fetchTasksByCategories()
         }
     }
 
-    const validation = (): boolean => {
-        if (todoTitle.length < 2) {
-            setError('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2-х.')
-            return true
-        } else {
+    const isValidation = (todoTitle: string): boolean => {
+        if (todoTitle.length < 2 && todoTitle.length <= 64) {
             return false
+        } else {
+            return true
         }
     }
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        if (!validation()) {
+        if (!isValidation(todoTitle)) {
+            setError('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2-х.')
+        } else {
             handleAddTask()
         }
     }
 
     const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+        setError('')
         setTodoTitle(event.target.value)
     }
 
-    if (error) {
-        alert(error)
-        setError('')
-    }
+    useEffect(() => {
+        if (error) {
+            alert(error)
+        }
+    }, [error])
 
     return (
         <form onSubmit={handleSubmit}>
