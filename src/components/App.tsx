@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchTasksByCategory, filterTypes } from '../api/http.js'
+import { getTasksByCategory, filterTypes } from '../api/http.js'
 
 import classes from '../App.module.css'
 import AddTask from '../components/AddTask/AddTask.tsx'
@@ -20,9 +20,9 @@ const App = () => {
     }, [])
 
     const fetchTasksByCategories = async (filter: filterTypes) => {
-        setIsFetching(true)
         try {
-            const todos = await fetchTasksByCategory(filter)
+            setIsFetching(true)
+            const todos = await getTasksByCategory(filter)
             setTasks(todos.data)
             setCategories(todos.info)
             setFilter(filter)
@@ -39,24 +39,14 @@ const App = () => {
 
     return (
         <div className={classes.container}>
-            <AddTask
-                isFetching={isFetching}
-                setIsFetching={setIsFetching}
-                fetchTasksByCategories={() => fetchTasksByCategories(filter)}
-            />
+            <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
             <CategoriesList
                 isFetching={isFetching}
                 categories={categories}
                 filter={filter}
                 fetchTasksByCategories={fetchTasksByCategories}
             />
-            <TaskList
-                isFetching={isFetching}
-                tasks={tasks}
-                fetchTasksByCategories={() => fetchTasksByCategories(filter)}
-                setIsFetching={setIsFetching}
-                setError={setError}
-            />
+            <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} setError={setError} />
             {isFetching && <h3>Fetching tasks...</h3>}
         </div>
     )

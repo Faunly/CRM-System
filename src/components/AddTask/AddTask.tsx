@@ -3,14 +3,13 @@ import classes from './AddTask.module.css'
 import { addTask } from '../../api/http.js'
 
 type AddTaskProps = {
-    isFetching: boolean
-    setIsFetching: (value: boolean) => void
     fetchTasksByCategories: () => void
 }
 
-const AddTask: FC<AddTaskProps> = ({ isFetching, setIsFetching, fetchTasksByCategories }) => {
+const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
     const [todoTitle, setTodoTitle] = useState('')
     const [error, setError] = useState('')
+    const [isFetching, setIsFetching] = useState(false)
 
     const handleAddTask = async () => {
         try {

@@ -1,6 +1,6 @@
 export type filterTypes = 'all' | 'inWork' | 'completed'
 
-export const fetchTasksByCategory = async (filter: filterTypes) => {
+export const getTasksByCategory = async (filter: filterTypes) => {
     try {
         const response = await fetch(`https://easydev.club/api/v1/todos?filter=${filter}`)
         return await response.json()

@@ -1,17 +1,16 @@
 import TaskItem from '../TaskItem/TaskItem.js'
 import { changeDataTask, deleteTask } from '../../api/http.js'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { TasksType } from '../../types/Tasks.js'
 
 type TaskListProps = {
-    setIsFetching: (value: boolean) => void
     tasks: TasksType[]
     setError: (value: string) => void
     fetchTasksByCategories: () => void
-    isFetching: boolean
 }
 
-const TaskList: FC<TaskListProps> = ({ setIsFetching, setError, fetchTasksByCategories, isFetching, tasks }) => {
+const TaskList: FC<TaskListProps> = ({ setError, fetchTasksByCategories, tasks }) => {
+    const [isFetching, setIsFetching] = useState(false)
     const handleDeleteTask = async (id: number) => {
         try {
             setIsFetching(true)
