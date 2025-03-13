@@ -1,0 +1,14 @@
+.categoriesList {
+    display: flex;
+    list-style: none;
+    gap: 10px;
+    margin: 2rem 0.2rem 0 0.2rem;
+    padding: 0;
+    justify-content: space-evenly;
+}
+
+.categoriesList a {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
