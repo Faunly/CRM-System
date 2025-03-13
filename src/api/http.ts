@@ -1,4 +1,4 @@
-export type filterTypes = 'all' | 'inWork' | 'completed'
+import { filterTypes } from '../types/filter'
 
 export const getTasksByCategory = async (filter: filterTypes) => {
     try {

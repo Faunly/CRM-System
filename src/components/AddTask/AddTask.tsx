@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FC, FormEvent, useState } from 'react'
 import classes from './AddTask.module.css'
 import { addTask } from '../../api/http.js'
 
@@ -16,15 +16,15 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
             setIsFetching(true)
             await addTask(todoTitle)
             fetchTasksByCategories()
+            setTodoTitle('')
         } catch {
-            setError('Ошибка создания задачи!')
+            setAndAlertError('Ошибка создания задачи!')
         } finally {
             setIsFetching(false)
-            setTodoTitle('')
         }
     }
 
-    const isValidation = (todoTitle: string): boolean => {
+    const validateTitle = (todoTitle: string): boolean => {
         if (todoTitle.length < 2 && todoTitle.length <= 64) {
             return false
         } else {
@@ -35,8 +35,8 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        if (!isValidation(todoTitle)) {
-            setError('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2-х.')
+        if (!validateTitle(todoTitle)) {
+            setAndAlertError('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2-х.')
         } else {
             handleAddTask()
         }
@@ -47,11 +47,10 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
         setTodoTitle(event.target.value)
     }
 
-    useEffect(() => {
-        if (error) {
-            alert(error)
-        }
-    }, [error])
+    const setAndAlertError = (error: string) => {
+        setError(error)
+        alert(error)
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -62,9 +61,7 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
                     id="input-task"
                     placeholder="Task To Be Done..."
                     value={todoTitle}
-                    onChange={e => {
-                        handleChangeInput(e)
-                    }}
+                    onChange={handleChangeInput}
                     maxLength={64}
                     required
                     className={`${classes.input} ${error && classes.error}`}

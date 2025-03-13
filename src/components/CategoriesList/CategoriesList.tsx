@@ -1,8 +1,8 @@
 import classes from './CategoriesList.module.css'
 import { FC } from 'react'
 import CategoriesItem from '../CategoriesItem/CategoriesItem'
-import { CategoriesType } from '../../types/Categories'
-import { filterTypes } from '../../api/http'
+import { CategoriesType } from '../../types/todolist'
+import { filterTypes } from '../../types/filter'
 
 type CategoriesListProps = {
     isFetching: boolean

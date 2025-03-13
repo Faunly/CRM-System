@@ -1,10 +1,11 @@
 import { FC } from 'react'
 import classes from './CategoriesItem.module.css'
+import { filterTypes } from '../../types/filter'
 
 type CategoriesItemProps = {
     curFilter: string
-    meta: { title: string; filterTitle: 'all' | 'inWork' | 'completed' }
-    onChangeFilter: (filterTitle: 'all' | 'inWork' | 'completed') => void
+    meta: { title: string; filterTitle: filterTypes }
+    onChangeFilter: (filterTitle: filterTypes) => void
     amount: number
 }
 

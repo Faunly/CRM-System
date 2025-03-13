@@ -1,7 +1,7 @@
 import TaskItem from '../TaskItem/TaskItem.js'
 import { changeDataTask, deleteTask } from '../../api/http.js'
 import { FC, useState } from 'react'
-import { TasksType } from '../../types/Tasks.js'
+import { TasksType } from '../../types/todolist.ts'
 
 type TaskListProps = {
     tasks: TasksType[]

@@ -3,3 +3,9 @@ export type CategoriesType = {
     completed: number
     inWork: number
 }
+
+export type TasksType = {
+    id: number
+    title: string
+    isDone: boolean
+}
