@@ -1,13 +1,14 @@
 import classes from './CategoriesList.module.css'
 import { FC } from 'react'
 import CategoriesItem from '../CategoriesItem/CategoriesItem'
-import { CategoriesType } from '../../types/Categories'
+import { CategoriesType } from '../../types/todolist'
+import { filterTypes } from '../../types/filter'
 
 type CategoriesListProps = {
     isFetching: boolean
-    filter: string
+    filter: filterTypes
     categories?: CategoriesType
-    fetchTasksByCategories: (filter: string) => void
+    fetchTasksByCategories: (filter: filterTypes) => void
 }
 
 const CategoriesList: FC<CategoriesListProps> = ({ isFetching, categories, filter, fetchTasksByCategories }) => {

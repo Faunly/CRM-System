@@ -4,52 +4,53 @@ import { addTask } from '../../api/http.js'
 import { Input, Button } from 'antd'
 
 type AddTaskProps = {
-    isFetching: boolean
-    setIsFetching: (value: boolean) => void
     fetchTasksByCategories: () => void
 }
 
-const AddTask: FC<AddTaskProps> = ({ isFetching, setIsFetching, fetchTasksByCategories }) => {
+const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
     const [todoTitle, setTodoTitle] = useState('')
-    const [errorTodo, setErrorTodo] = useState('')
+    const [error, setError] = useState('')
+    const [isFetching, setIsFetching] = useState(false)
 
     const handleAddTask = async () => {
         try {
             setIsFetching(true)
             await addTask(todoTitle)
+            fetchTasksByCategories()
+            setTodoTitle('')
         } catch {
-            setErrorTodo('Ошибка создания задачи!')
+            setAndAlertError('Ошибка создания задачи!')
         } finally {
             setIsFetching(false)
-            setTodoTitle('')
-            fetchTasksByCategories()
         }
     }
 
-    const validation = (): boolean => {
-        if (todoTitle.length < 2) {
-            setErrorTodo('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2--х.')
+    const validateTitle = (todoTitle: string): boolean => {
+        if (todoTitle.length < 2 && todoTitle.length <= 64) {
             return false
         } else {
             return true
         }
     }
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        if (validation()) {
+        if (!validateTitle(todoTitle)) {
+            setAndAlertError('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2-х.')
+        } else {
             handleAddTask()
         }
     }
 
     const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+        setError('')
         setTodoTitle(event.target.value)
-        setErrorTodo('')
     }
 
-    if (errorTodo) {
-        alert(errorTodo)
+    const setAndAlertError = (error: string) => {
+        setError(error)
+        alert(error)
     }
 
     return (
@@ -60,13 +61,11 @@ const AddTask: FC<AddTaskProps> = ({ isFetching, setIsFetching, fetchTasksByCate
                     id="input-task"
                     placeholder="Task To Be Done..."
                     value={todoTitle}
-                    status={errorTodo && 'error'}
-                    onChange={e => {
-                        handleChangeInput(e)
-                    }}
+                    status={error && 'error'}
+                    onChange={handleChangeInput}
                     maxLength={64}
                     required
-                    className={`${classes.input} ${errorTodo && classes.errorTodo}`}
+                    className={`${classes.input} ${error && classes.error}`}
                 />
 
                 <Button

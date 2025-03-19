@@ -1,28 +1,29 @@
 import { useEffect, useState } from 'react'
-import { fetchTasksByCategory } from '../api/http.js'
+import { getTasksByCategory } from '../api/http.js'
 
 import classes from '../App.module.css'
 import AddTask from '../components/AddTask/AddTask.tsx'
 import CategoriesList from '../components/CategoriesList/CategoriesList.js'
 import TaskList from '../components/TaskList/TaskList.tsx'
-import { TasksType } from '../types/Tasks.ts'
-import { CategoriesType } from '../types/Categories.ts'
+import { TasksType } from '../types/todolist.ts'
+import { CategoriesType } from '../types/todolist.ts'
+import { filterTypes } from '../types/filter.ts'
 
 const App = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
-    const [categories, setCategories] = useState<CategoriesType>()
+    const [categories, setCategories] = useState<CategoriesType | undefined>()
     const [error, setError] = useState('')
     const [isFetching, setIsFetching] = useState(true)
-    const [filter, setFilter] = useState('all')
+    const [filter, setFilter] = useState<filterTypes>('all')
 
     useEffect(() => {
         fetchTasksByCategories('all')
     }, [])
 
-    const fetchTasksByCategories = async (filter: string) => {
-        setIsFetching(true)
+    const fetchTasksByCategories = async (filter: filterTypes) => {
         try {
-            const todos = await fetchTasksByCategory(filter)
+            setIsFetching(true)
+            const todos = await getTasksByCategory(filter)
             setTasks(todos.data)
             setCategories(todos.info)
             setFilter(filter)
@@ -39,24 +40,14 @@ const App = () => {
 
     return (
         <div className={classes.container}>
-            <AddTask
-                isFetching={isFetching}
-                setIsFetching={setIsFetching}
-                fetchTasksByCategories={() => fetchTasksByCategories(filter)}
-            />
+            <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
             <CategoriesList
                 isFetching={isFetching}
                 categories={categories}
                 filter={filter}
                 fetchTasksByCategories={fetchTasksByCategories}
             />
-            <TaskList
-                isFetching={isFetching}
-                tasks={tasks}
-                fetchTasksByCategories={() => fetchTasksByCategories(filter)}
-                setIsFetching={setIsFetching}
-                setError={setError}
-            />
+            <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} setError={setError} />
             {isFetching && <h3>Fetching tasks...</h3>}
         </div>
     )
