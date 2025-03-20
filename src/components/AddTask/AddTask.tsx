@@ -63,6 +63,7 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
                     value={todoTitle}
                     status={error && 'error'}
                     onChange={handleChangeInput}
+                    showCount
                     maxLength={64}
                     required
                     className={`${classes.input} ${error && classes.error}`}

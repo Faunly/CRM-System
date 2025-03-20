@@ -21,6 +21,7 @@ const App = () => {
 
     useEffect(() => {
         fetchTasksByCategories('all')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const fetchTasksByCategories = async (filter: filterTypes) => {
