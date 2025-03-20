@@ -12,9 +12,12 @@ import { filterTypes } from '../types/filter.ts'
 const App = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
     const [categories, setCategories] = useState<CategoriesType | undefined>()
-    const [error, setError] = useState('')
     const [isFetching, setIsFetching] = useState(true)
     const [filter, setFilter] = useState<filterTypes>('all')
+
+    const setAndAlertError = (error: string) => {
+        alert(error)
+    }
 
     useEffect(() => {
         fetchTasksByCategories('all')
@@ -27,15 +30,11 @@ const App = () => {
             setTasks(todos.data)
             setCategories(todos.info)
             setFilter(filter)
-        } catch (error) {
-            setError(error as string)
+        } catch {
+            setAndAlertError('Ошибка получения задач!')
         } finally {
             setIsFetching(false)
         }
-    }
-
-    if (error) {
-        console.log('Error fetch!!!')
     }
 
     return (
@@ -47,7 +46,7 @@ const App = () => {
                 filter={filter}
                 fetchTasksByCategories={fetchTasksByCategories}
             />
-            <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} setError={setError} />
+            <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
             {isFetching && <h3>Fetching tasks...</h3>}
         </div>
     )

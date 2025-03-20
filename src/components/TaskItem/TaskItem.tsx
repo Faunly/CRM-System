@@ -10,7 +10,7 @@ type TaskItemProps = {
     id: number
     titleTask: string
     isDone: boolean
-    onChangeData: (id: number, titleTask: string, isDone: boolean, check?: string) => void
+    onChangeData: (id: number, titleTask: string, isDone: boolean) => void
     onDelete: (id: number) => void
 }
 
@@ -38,9 +38,7 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
             <div className={classes.leftContainer}>
                 <div className={classes.round}>
                     <input type="checkbox" name="checkboxInput" defaultChecked={isDone} />
-                    <label
-                        htmlFor="checkboxInput"
-                        onClick={() => onChangeData(id, titleTask, !isDone, 'check')}></label>
+                    <label htmlFor="checkboxInput" onClick={() => onChangeData(id, titleTask, !isDone)}></label>
                 </div>
                 {!isEdited ? (
                     <h3 className={isDone ? `${classes.checked}` : undefined}>{curTitleTask}</h3>
