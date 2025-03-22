@@ -1,17 +1,30 @@
 import { useEffect, useState } from 'react'
 import { getTasksByCategory } from '../api/http.js'
+import { Tabs } from 'antd'
 
 import classes from '../App.module.css'
 import AddTask from '../components/AddTask/AddTask.tsx'
-import CategoriesList from '../components/CategoriesList/CategoriesList.js'
 import TaskList from '../components/TaskList/TaskList.tsx'
 import { TasksType } from '../types/todolist.ts'
-import { CategoriesType } from '../types/todolist.ts'
-import { filterTypes } from '../types/filter.ts'
+import { filterTypes } from '../types/filter'
+
+const items: { key: string; label: string }[] = [
+    {
+        key: 'all',
+        label: 'Все',
+    },
+    {
+        key: 'inWork',
+        label: 'В работе',
+    },
+    {
+        key: 'completed',
+        label: 'Сделано',
+    },
+]
 
 const App = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
-    const [categories, setCategories] = useState<CategoriesType | undefined>()
     const [isFetching, setIsFetching] = useState(true)
     const [filter, setFilter] = useState<filterTypes>('all')
 
@@ -29,7 +42,6 @@ const App = () => {
             setIsFetching(true)
             const todos = await getTasksByCategory(filter)
             setTasks(todos.data)
-            setCategories(todos.info)
             setFilter(filter)
         } catch {
             setAndAlertError('Ошибка получения задач!')
@@ -41,11 +53,13 @@ const App = () => {
     return (
         <div className={classes.container}>
             <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
-            <CategoriesList
-                isFetching={isFetching}
-                categories={categories}
-                filter={filter}
-                fetchTasksByCategories={fetchTasksByCategories}
+            <Tabs
+                defaultActiveKey="all"
+                activeKey={filter}
+                items={items}
+                centered
+                size="large"
+                onChange={(activeKey: string) => fetchTasksByCategories(activeKey as filterTypes)}
             />
             <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
             {isFetching && <h3>Fetching tasks...</h3>}
