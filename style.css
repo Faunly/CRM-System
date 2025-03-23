@@ -2,3 +2,7 @@ body {
     background-color: #eff2fc;
     font-family: Cantarell, 'sans-serif';
 }
+
+html {
+    overflow: hidden;
+}

@@ -2,6 +2,7 @@ import TaskItem from '../TaskItem/TaskItem.js'
 import { changeDataTask, deleteTask } from '../../api/http.js'
 import { FC, useState } from 'react'
 import { TasksType } from '../../types/todolist.ts'
+import classes from './TaskList.module.css'
 
 type TaskListProps = {
     tasks: TasksType[]
@@ -39,17 +40,19 @@ const TaskList: FC<TaskListProps> = ({ fetchTasksByCategories, tasks }) => {
     }
 
     return (
-        !isFetching &&
-        tasks.map(task => (
-            <TaskItem
-                key={task.id}
-                id={task.id}
-                titleTask={task.title}
-                isDone={task.isDone}
-                onChangeData={handleChangeDataTask}
-                onDelete={handleDeleteTask}
-            />
-        ))
+        <div className={classes.tasklist}>
+            {!isFetching &&
+                tasks.map(task => (
+                    <TaskItem
+                        key={task.id}
+                        id={task.id}
+                        titleTask={task.title}
+                        isDone={task.isDone}
+                        onChangeData={handleChangeDataTask}
+                        onDelete={handleDeleteTask}
+                    />
+                ))}
+        </div>
     )
 }
 
