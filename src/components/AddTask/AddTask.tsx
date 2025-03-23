@@ -1,27 +1,27 @@
-import { ChangeEvent, FC, useState } from 'react'
+import { FC, useState } from 'react'
 import classes from './AddTask.module.css'
 import { addTask } from '../../api/http.js'
-import { Input, Button, Form, FormProps } from 'antd'
+import { Input, Button, Form } from 'antd'
+import type { FormProps } from 'antd'
 
 type AddTaskProps = {
     fetchTasksByCategories: () => void
 }
 
 type FieldType = {
-    titleTask: string
+    todoTitle: string
 }
 
 const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
-    const [todoTitle, setTodoTitle] = useState('')
-    const [error, setError] = useState('')
+    const [form] = Form.useForm<FieldType>()
     const [isFetching, setIsFetching] = useState(false)
 
     const handleAddTask = async () => {
         try {
             setIsFetching(true)
-            await addTask(todoTitle)
+            await addTask(form.getFieldValue('todoTitle'))
+            form.setFieldsValue({ todoTitle: '' })
             fetchTasksByCategories()
-            setTodoTitle('')
         } catch {
             setAndAlertError('Ошибка создания задачи!')
         } finally {
@@ -31,36 +31,27 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = () => {
         handleAddTask()
-        setTodoTitle('')
-    }
-
-    const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
-        setError('')
-        setTodoTitle(event.target.value)
     }
 
     const setAndAlertError = (error: string) => {
-        setError(error)
         alert(error)
     }
 
     return (
-        <Form onFinish={onFinish}>
+        <Form form={form} onFinish={onFinish}>
             <div className={classes.container}>
                 <Form.Item<FieldType>
-                    name="titleTask"
-                    id="titleTask"
-                    rules={[{ min: 2, message: 'Нельзя создать задачу с количеством символов меньше 2-х!' }]}>
+                    name="todoTitle"
+                    rules={[
+                        { required: true, min: 2, message: 'Нельзя создать задачу с количеством символов меньше 2-х!' },
+                    ]}>
                     <Input
                         type="text"
                         id="input-task"
                         placeholder="Task To Be Done..."
-                        value={todoTitle}
-                        onChange={handleChangeInput}
                         showCount
                         maxLength={64}
-                        minLength={1}
-                        className={`${classes.input} ${error && classes.error}`}
+                        className={`${classes.input}`}
                     />
                 </Form.Item>
                 <Form.Item>
