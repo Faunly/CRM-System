@@ -8,10 +8,10 @@ import TaskList from '../components/TaskList/TaskList.tsx'
 import { TasksType } from '../types/todolist.ts'
 import { filterTypes } from '../types/filter'
 
-const items: { key: string; label: string }[] = [
+const items: { key: filterTypes; label: string }[] = [
     {
         key: 'all',
-        label: 'Все',
+        label: `Все`,
     },
     {
         key: 'inWork',

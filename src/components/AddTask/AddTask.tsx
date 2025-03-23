@@ -65,6 +65,7 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
                     onChange={handleChangeInput}
                     showCount
                     maxLength={64}
+                    minLength={1}
                     required
                     className={`${classes.input} ${error && classes.error}`}
                 />
