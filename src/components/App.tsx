@@ -5,32 +5,29 @@ import { Tabs } from 'antd'
 import classes from '../App.module.css'
 import AddTask from '../components/AddTask/AddTask.tsx'
 import TaskList from '../components/TaskList/TaskList.tsx'
-import { TasksType } from '../types/todolist.ts'
+import { CategoriesType, TasksType } from '../types/todolist.ts'
 import { filterTypes } from '../types/filter'
-
-const items: { key: filterTypes; label: string }[] = [
-    {
-        key: 'all',
-        label: `Все`,
-    },
-    {
-        key: 'inWork',
-        label: 'В работе',
-    },
-    {
-        key: 'completed',
-        label: 'Сделано',
-    },
-]
 
 const App = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
+    const [infoTasks, setInfoTasks] = useState<CategoriesType>()
     const [isFetching, setIsFetching] = useState(true)
     const [filter, setFilter] = useState<filterTypes>('all')
 
-    const setAndAlertError = (error: string) => {
-        alert(error)
-    }
+    const items: { key: filterTypes; label: string }[] = [
+        {
+            key: 'all',
+            label: `Все (${infoTasks?.all})`,
+        },
+        {
+            key: 'inWork',
+            label: `В работе (${infoTasks?.inWork})`,
+        },
+        {
+            key: 'completed',
+            label: `Сделано (${infoTasks?.completed})`,
+        },
+    ]
 
     useEffect(() => {
         fetchTasksByCategories('all')
@@ -42,12 +39,17 @@ const App = () => {
             setIsFetching(true)
             const todos = await getTasksByCategory(filter)
             setTasks(todos.data)
+            setInfoTasks(todos.info)
             setFilter(filter)
         } catch {
             setAndAlertError('Ошибка получения задач!')
         } finally {
             setIsFetching(false)
         }
+    }
+
+    const setAndAlertError = (error: string) => {
+        alert(error)
     }
 
     return (
