@@ -1,10 +1,14 @@
-import { ChangeEvent, FC, FormEvent, useState } from 'react'
+import { ChangeEvent, FC, useState } from 'react'
 import classes from './AddTask.module.css'
 import { addTask } from '../../api/http.js'
-import { Input, Button } from 'antd'
+import { Input, Button, Form, FormProps } from 'antd'
 
 type AddTaskProps = {
     fetchTasksByCategories: () => void
+}
+
+type FieldType = {
+    titleTask: string
 }
 
 const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
@@ -25,22 +29,9 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
         }
     }
 
-    const validateTitle = (todoTitle: string): boolean => {
-        if (todoTitle.length < 2 && todoTitle.length <= 64) {
-            return false
-        } else {
-            return true
-        }
-    }
-
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-
-        if (!validateTitle(todoTitle)) {
-            setAndAlertError('Ошибка валидации! Нельзя создать задачу с количеством символов меньше 2-х.')
-        } else {
-            handleAddTask()
-        }
+    const onFinish: FormProps<FieldType>['onFinish'] = () => {
+        handleAddTask()
+        setTodoTitle('')
     }
 
     const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -54,30 +45,34 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <Form onFinish={onFinish}>
             <div className={classes.container}>
-                <Input
-                    type="text"
-                    id="input-task"
-                    placeholder="Task To Be Done..."
-                    value={todoTitle}
-                    status={error && 'error'}
-                    onChange={handleChangeInput}
-                    showCount
-                    maxLength={64}
-                    minLength={1}
-                    required
-                    className={`${classes.input} ${error && classes.error}`}
-                />
-
-                <Button
-                    className={`${classes.button} ${isFetching && classes.disabled}`}
-                    disabled={isFetching}
-                    htmlType="submit">
-                    Add
-                </Button>
+                <Form.Item<FieldType>
+                    name="titleTask"
+                    id="titleTask"
+                    rules={[{ min: 2, message: 'Нельзя создать задачу с количеством символов меньше 2-х!' }]}>
+                    <Input
+                        type="text"
+                        id="input-task"
+                        placeholder="Task To Be Done..."
+                        value={todoTitle}
+                        onChange={handleChangeInput}
+                        showCount
+                        maxLength={64}
+                        minLength={1}
+                        className={`${classes.input} ${error && classes.error}`}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <Button
+                        className={`${classes.button} ${isFetching && classes.disabled}`}
+                        disabled={isFetching}
+                        htmlType="submit">
+                        Add
+                    </Button>
+                </Form.Item>
             </div>
-        </form>
+        </Form>
     )
 }
 
