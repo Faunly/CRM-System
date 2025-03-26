@@ -44,6 +44,7 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
                     name="todoTitle"
                     rules={[
                         { required: true, min: 2, message: 'Нельзя создать задачу с количеством символов меньше 2-х!' },
+                        { max: 64, message: 'Нельзя создать задачу с количеством символов больше 64-х!' },
                     ]}>
                     <Input
                         type="text"
