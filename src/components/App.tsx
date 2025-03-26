@@ -29,11 +29,6 @@ const App = () => {
         },
     ]
 
-    useEffect(() => {
-        fetchTasksByCategories('all')
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
     const fetchTasksByCategories = async (filter: filterTypes) => {
         try {
             setIsFetching(true)
@@ -47,6 +42,15 @@ const App = () => {
             setIsFetching(false)
         }
     }
+
+    useEffect(() => {
+        const refetch = setInterval(() => {
+            fetchTasksByCategories(filter)
+            console.log('update')
+        }, 5000)
+
+        return () => clearInterval(refetch)
+    }, [fetchTasksByCategories])
 
     const setAndAlertError = (error: string) => {
         alert(error)
