@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getTasksByCategory } from '../api/http.js'
 import { Tabs } from 'antd'
 
@@ -29,7 +29,7 @@ const App = () => {
         },
     ]
 
-    const fetchTasksByCategories = async (filter: filterTypes) => {
+    const fetchTasksByCategories = useCallback(async (filter: filterTypes) => {
         try {
             setIsFetching(true)
             const todos = await getTasksByCategory(filter)
@@ -41,7 +41,7 @@ const App = () => {
         } finally {
             setIsFetching(false)
         }
-    }
+    }, [])
 
     useEffect(() => {
         const refetch = setInterval(() => {
@@ -50,7 +50,7 @@ const App = () => {
         }, 5000)
 
         return () => clearInterval(refetch)
-    }, [fetchTasksByCategories])
+    }, [fetchTasksByCategories, filter])
 
     const setAndAlertError = (error: string) => {
         alert(error)
