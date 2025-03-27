@@ -1,8 +1,10 @@
 import { FC, useState } from 'react'
-import imageEdit from '/src/assets/pencil.svg'
-import imageRemove from '/src/assets/trash.svg'
-import imageSave from '/src/assets/success.svg'
-import imageCancel from '/src/assets/cancel.svg'
+import { EditFilled, DeleteFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
+
+// import imageEdit from '/src/assets/pencil.svg'
+// import imageRemove from '/src/assets/trash.svg'
+// import imageSave from '/src/assets/success.svg'
+// import imageCancel from '/src/assets/cancel.svg'
 
 import classes from './TasksItem.module.css'
 
@@ -56,7 +58,7 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
             <div className={classes.rightContainer}>
                 {!isEdited ? (
                     <button className={`${classes.button} ${classes.blue}`} onClick={handleEdited}>
-                        <img src={imageEdit} width="20px" height="20px" alt="pencil" />
+                        <EditFilled style={{ color: 'white', fontSize: '1.4rem' }} alt="edit" />
                     </button>
                 ) : (
                     <>
@@ -66,19 +68,19 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
                                 onChangeData(id, curTitleTask, isDone)
                                 handleEdited()
                             }}>
-                            <img src={imageSave} width="20px" height="20px" alt="checkmark" />
+                            <CheckCircleFilled style={{ fontSize: '1.4rem', color: 'white' }} alt="save" />
                         </button>
                         <button
                             className={`${classes.button} ${classes.red}`}
                             onClick={() => {
                                 handleCancel()
                             }}>
-                            <img src={imageCancel} width="20px" height="20px" alt="cross" />
+                            <CloseCircleFilled style={{ fontSize: '1.4rem', color: 'white' }} alt="cancel" />
                         </button>
                     </>
                 )}
                 <button className={`${classes.button} ${classes.red}`} onClick={() => onDelete(id)}>
-                    <img src={imageRemove} width="20px" height="20px" alt="pencil" />
+                    <DeleteFilled style={{ fontSize: '1.4rem', color: 'white' }} />
                 </button>
             </div>
         </div>

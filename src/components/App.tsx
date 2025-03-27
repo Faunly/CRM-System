@@ -46,7 +46,6 @@ const App = () => {
     useEffect(() => {
         const refetch = setInterval(() => {
             fetchTasksByCategories(filter)
-            console.log('update')
         }, 5000)
 
         return () => clearInterval(refetch)
