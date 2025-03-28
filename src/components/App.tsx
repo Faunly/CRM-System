@@ -1,20 +1,31 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getTasksByCategory } from '../api/http.js'
-import { Tabs } from 'antd'
+import { Tabs, Flex, Layout, Menu } from 'antd'
+import { ContainerOutlined, UserOutlined } from '@ant-design/icons'
+import type { MenuProps } from 'antd'
 
-import classes from '../App.module.css'
+type MenuItem = Required<MenuProps>['items'][number]
+const { Header, Sider, Content } = Layout
+
 import AddTask from '../components/AddTask/AddTask.tsx'
 import TaskList from '../components/TaskList/TaskList.tsx'
 import { CategoriesType, TasksType } from '../types/todolist.ts'
 import { filterTypes } from '../types/filter'
+import Profile from '../pages/Profile.tsx'
 
 const App = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
     const [infoTasks, setInfoTasks] = useState<CategoriesType>()
     const [isFetching, setIsFetching] = useState(true)
     const [filter, setFilter] = useState<filterTypes>('all')
+    const [siderItem, setSiderItem] = useState('todo')
 
-    const items: { key: filterTypes; label: string }[] = [
+    const itemsSider: MenuItem[] = [
+        { key: 'todo', icon: <ContainerOutlined />, label: 'Todo-List' },
+        { key: 'profile', icon: <UserOutlined />, label: 'Профиль' },
+    ]
+
+    const itemsTabs: { key: filterTypes; label: string }[] = [
         {
             key: 'all',
             label: `Все (${infoTasks?.all})`,
@@ -56,19 +67,40 @@ const App = () => {
     }
 
     return (
-        <div className={classes.container}>
-            <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
-            <Tabs
-                defaultActiveKey="all"
-                activeKey={filter}
-                items={items}
-                centered
-                size="large"
-                onChange={(activeKey: string) => fetchTasksByCategories(activeKey as filterTypes)}
-            />
-            <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
-            {isFetching && <h3>Fetching tasks...</h3>}
-        </div>
+        <Layout hasSider style={{ height: '100vh' }}>
+            <Sider width="25%" theme="light">
+                <Menu
+                    items={itemsSider}
+                    mode="inline"
+                    defaultSelectedKeys={[`${siderItem}`]}
+                    onSelect={key => {
+                        setSiderItem(key.key)
+                    }}></Menu>
+            </Sider>
+            <Layout>
+                <Header style={{ backgroundColor: 'transparent', margin: '0.5rem 0 0 0' }}>
+                    <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
+                </Header>
+                <Content>
+                    {siderItem === 'todo' ? (
+                        <Flex vertical align="center">
+                            <Tabs
+                                defaultActiveKey="all"
+                                activeKey={filter}
+                                items={itemsTabs}
+                                centered
+                                size="large"
+                                onChange={(activeKey: string) => fetchTasksByCategories(activeKey as filterTypes)}
+                            />
+                            <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
+                            {isFetching && <h3>Fetching tasks...</h3>}
+                        </Flex>
+                    ) : (
+                        <Profile></Profile>
+                    )}
+                </Content>
+            </Layout>
+        </Layout>
     )
 }
 
