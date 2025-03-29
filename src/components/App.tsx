@@ -55,12 +55,15 @@ const App = () => {
     }, [])
 
     useEffect(() => {
-        const refetch = setInterval(() => {
-            fetchTasksByCategories(filter)
-        }, 5000)
+        if (siderItem === 'todo') {
+            const refetch = setInterval(() => {
+                fetchTasksByCategories(filter)
+                console.log('update')
+            }, 5000)
 
-        return () => clearInterval(refetch)
-    }, [fetchTasksByCategories, filter])
+            return () => clearInterval(refetch)
+        }
+    }, [fetchTasksByCategories, filter, siderItem])
 
     const setAndAlertError = (error: string) => {
         alert(error)
@@ -78,27 +81,29 @@ const App = () => {
                     }}></Menu>
             </Sider>
             <Layout>
-                <Header style={{ backgroundColor: 'transparent', margin: '0.5rem 0 0 0' }}>
-                    <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
-                </Header>
-                <Content>
-                    {siderItem === 'todo' ? (
-                        <Flex vertical align="center">
-                            <Tabs
-                                defaultActiveKey="all"
-                                activeKey={filter}
-                                items={itemsTabs}
-                                centered
-                                size="large"
-                                onChange={(activeKey: string) => fetchTasksByCategories(activeKey as filterTypes)}
-                            />
-                            <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
-                            {isFetching && <h3>Fetching tasks...</h3>}
-                        </Flex>
-                    ) : (
-                        <Profile></Profile>
-                    )}
-                </Content>
+                {siderItem === 'todo' ? (
+                    <>
+                        <Header style={{ backgroundColor: 'transparent', margin: '0.5rem 0 0 0' }}>
+                            <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
+                        </Header>
+                        <Content>
+                            <Flex vertical align="center">
+                                <Tabs
+                                    defaultActiveKey="all"
+                                    activeKey={filter}
+                                    items={itemsTabs}
+                                    centered
+                                    size="large"
+                                    onChange={(activeKey: string) => fetchTasksByCategories(activeKey as filterTypes)}
+                                />
+                                <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
+                                {isFetching && <h3>Fetching tasks...</h3>}
+                            </Flex>
+                        </Content>
+                    </>
+                ) : (
+                    <Profile></Profile>
+                )}
             </Layout>
         </Layout>
     )
