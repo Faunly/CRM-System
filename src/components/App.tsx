@@ -71,7 +71,7 @@ const App = () => {
 
     return (
         <Layout hasSider style={{ height: '100vh' }}>
-            <Sider width="25%" theme="light">
+            <Sider width="10%" theme="light">
                 <Menu
                     items={itemsSider}
                     mode="inline"
@@ -102,7 +102,9 @@ const App = () => {
                         </Content>
                     </>
                 ) : (
-                    <Profile></Profile>
+                    <Flex vertical align="center">
+                        <Profile></Profile>
+                    </Flex>
                 )}
             </Layout>
         </Layout>
