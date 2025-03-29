@@ -2,6 +2,7 @@ import TaskItem from '../TaskItem/TaskItem.js'
 import { changeDataTask, deleteTask } from '../../api/http.js'
 import { FC, useState } from 'react'
 import { TasksType } from '../../types/todolist.ts'
+import { List } from 'antd'
 import classes from './TaskList.module.css'
 
 type TaskListProps = {
@@ -40,7 +41,7 @@ const TaskList: FC<TaskListProps> = ({ fetchTasksByCategories, tasks }) => {
     }
 
     return (
-        <div className={classes.tasklist}>
+        <List className={classes.tasklist}>
             {!isFetching &&
                 tasks.map(task => (
                     <TaskItem
@@ -52,7 +53,7 @@ const TaskList: FC<TaskListProps> = ({ fetchTasksByCategories, tasks }) => {
                         onDelete={handleDeleteTask}
                     />
                 ))}
-        </div>
+        </List>
     )
 }
 
