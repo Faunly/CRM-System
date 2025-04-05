@@ -1,29 +1,81 @@
-// import { Flex, Tabs } from "antd";
-// import TaskList from "../components/TaskList/TaskList";
+import { Flex, Tabs } from 'antd'
+import TaskList from '../components/TaskList/TaskList'
+import { filterTypes } from '../types/filter'
+import { useCallback, useEffect, useState } from 'react'
+import { CategoriesType, TasksType } from '../types/todolist'
+import { Content, Header } from 'antd/es/layout/layout'
+import AddTask from '../components/AddTask/AddTask'
+import { getTasksByCategory } from '../api/http'
 
-const MainPage = () => {
+const TodoList = () => {
+    const [tasks, setTasks] = useState<TasksType[]>([])
+    const [filter, setFilter] = useState<filterTypes>('all')
+    const [infoTasks, setInfoTasks] = useState<CategoriesType>()
+    const [isFetching, setIsFetching] = useState(true)
+
+    const fetchTasksByCategories = useCallback(async (filter: filterTypes) => {
+        try {
+            setIsFetching(true)
+            const todos = await getTasksByCategory(filter)
+            setTasks(todos.data)
+            setInfoTasks(todos.info)
+            setFilter(filter)
+        } catch {
+            setAndAlertError('Ошибка получения задач!')
+        } finally {
+            setIsFetching(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        const refetch = setInterval(() => {
+            fetchTasksByCategories(filter)
+            console.log('update')
+        }, 5000)
+
+        return () => clearInterval(refetch)
+    }, [fetchTasksByCategories, filter])
+
+    const setAndAlertError = (error: string) => {
+        alert(error)
+    }
+
+    const itemsTabs: { key: filterTypes; label: string }[] = [
+        {
+            key: 'all',
+            label: `Все (${infoTasks?.all})`,
+        },
+        {
+            key: 'inWork',
+            label: `В работе (${infoTasks?.inWork})`,
+        },
+        {
+            key: 'completed',
+            label: `Сделано (${infoTasks?.completed})`,
+        },
+    ]
+
     return (
-        <p>mainpage</p>
-        // <>
-        //   <Flex vertical align="center">
-        //     <Tabs
-        //       defaultActiveKey="all"
-        //       activeKey={filter}
-        //       items={itemsTabs}
-        //       centered
-        //       size="large"
-        //       onChange={(activeKey: string) =>
-        //         fetchTasksByCategories(activeKey as filterTypes)
-        //       }
-        //     />
-        //     <TaskList
-        //       tasks={tasks}
-        //       fetchTasksByCategories={() => fetchTasksByCategories(filter)}
-        //     />
-        //     {isFetching && <h3>Fetching tasks...</h3>}
-        //   </Flex>
-        // </>
+        <Flex vertical style={{ alignItems: 'center', width: '100%' }}>
+            <Header style={{ backgroundColor: 'transparent', margin: '0.5rem 0 0 0' }}>
+                <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
+            </Header>
+            <Content>
+                <Flex vertical align="center">
+                    <Tabs
+                        defaultActiveKey="all"
+                        activeKey={filter}
+                        items={itemsTabs}
+                        centered
+                        size="large"
+                        onChange={(activeKey: string) => fetchTasksByCategories(activeKey as filterTypes)}
+                    />
+                    <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
+                    {isFetching && <h3>Fetching tasks...</h3>}
+                </Flex>
+            </Content>
+        </Flex>
     )
 }
 
-export default MainPage
+export default TodoList
