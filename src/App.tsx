@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getTasksByCategory } from '../api/http.js'
-import { Tabs, Flex, Layout, Menu } from 'antd'
+import { getTasksByCategory } from './api/http.ts'
+import { Flex, Layout, Menu, Tabs } from 'antd'
 import { ContainerOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 
 type MenuItem = Required<MenuProps>['items'][number]
 const { Header, Sider, Content } = Layout
 
-import AddTask from '../components/AddTask/AddTask.tsx'
-import TaskList from '../components/TaskList/TaskList.tsx'
-import { CategoriesType, TasksType } from '../types/todolist.ts'
-import { filterTypes } from '../types/filter'
-import Profile from '../pages/Profile.tsx'
+import { CategoriesType, TasksType } from './types/todolist.ts'
+import { filterTypes } from './types/filter'
+import { useNavigate } from 'react-router'
+import AppRoutes from './routes/routes.tsx'
+import AddTask from './components/AddTask/AddTask.tsx'
+import TaskList from './components/TaskList/TaskList.tsx'
 
 const App = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
@@ -20,9 +21,11 @@ const App = () => {
     const [filter, setFilter] = useState<filterTypes>('all')
     const [siderItem, setSiderItem] = useState('todo')
 
+    const navigate = useNavigate()
+
     const itemsSider: MenuItem[] = [
-        { key: 'todo', icon: <ContainerOutlined />, label: 'Todo-List' },
-        { key: 'profile', icon: <UserOutlined />, label: 'Профиль' },
+        { key: 'todo', icon: <ContainerOutlined />, label: 'Todo-List', onClick: () => navigate('/todo') },
+        { key: 'profile', icon: <UserOutlined />, label: 'Профиль', onClick: () => navigate('/profile') },
     ]
 
     const itemsTabs: { key: filterTypes; label: string }[] = [
@@ -102,9 +105,7 @@ const App = () => {
                         </Content>
                     </>
                 ) : (
-                    <Flex vertical align="center">
-                        <Profile></Profile>
-                    </Flex>
+                    <AppRoutes />
                 )}
             </Layout>
         </Layout>
