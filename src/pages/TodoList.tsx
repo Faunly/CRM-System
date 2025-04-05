@@ -11,7 +11,7 @@ const TodoList = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
     const [filter, setFilter] = useState<filterTypes>('all')
     const [infoTasks, setInfoTasks] = useState<CategoriesType>()
-    const [isFetching, setIsFetching] = useState(true)
+    const [isFetching, setIsFetching] = useState(false)
 
     const fetchTasksByCategories = useCallback(async (filter: filterTypes) => {
         try {
@@ -28,13 +28,16 @@ const TodoList = () => {
     }, [])
 
     useEffect(() => {
-        const refetch = setInterval(() => {
+        const fetchData = () => {
             fetchTasksByCategories(filter)
             console.log('update')
-        }, 5000)
+        }
+
+        fetchData()
+        const refetch = setInterval(fetchData, 5000)
 
         return () => clearInterval(refetch)
-    }, [fetchTasksByCategories, filter])
+    }, [filter])
 
     const setAndAlertError = (error: string) => {
         alert(error)
@@ -56,7 +59,7 @@ const TodoList = () => {
     ]
 
     return (
-        <Flex vertical style={{ alignItems: 'center', width: '100%' }}>
+        <Flex vertical style={{ alignItems: 'center', width: '100%', overflowY: 'hidden' }}>
             <Header style={{ backgroundColor: 'transparent', margin: '0.5rem 0 0 0' }}>
                 <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
             </Header>
@@ -68,7 +71,9 @@ const TodoList = () => {
                         items={itemsTabs}
                         centered
                         size="large"
-                        onChange={(activeKey: string) => fetchTasksByCategories(activeKey as filterTypes)}
+                        onChange={(activeKey: string) => {
+                            fetchTasksByCategories(activeKey as filterTypes)
+                        }}
                     />
                     <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
                     {isFetching && <h3>Fetching tasks...</h3>}

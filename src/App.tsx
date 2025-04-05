@@ -21,7 +21,7 @@ const App = () => {
 
     return (
         <Layout hasSider style={{ height: '100vh' }}>
-            <Sider width="10%" theme="light">
+            <Sider theme="light">
                 <Menu
                     items={itemsSider}
                     mode="inline"
