@@ -1,9 +1,24 @@
-import { filterTypes } from '../types/filter'
+import { filterTypes } from './../types/filter'
+import axios from 'axios'
+
+axios.defaults.baseURL = 'https://easydev.club/api/v1/todos'
+axios.defaults.headers.post = {
+    accept: 'application/json',
+    'Content-Type': 'application/json',
+}
+axios.defaults.headers.put = {
+    accept: 'application/json',
+    'Content-Type': 'application/json',
+}
+axios.defaults.headers.delete = { accept: 'application/json' }
 
 export const getTasksByCategory = async (filter: filterTypes) => {
     try {
-        const response = await fetch(`https://easydev.club/api/v1/todos?filter=${filter}`)
-        return await response.json()
+        const response = await axios({
+            params: { filter },
+            method: 'GET',
+        })
+        return await response.data
     } catch {
         throw new Error()
     }
@@ -11,18 +26,14 @@ export const getTasksByCategory = async (filter: filterTypes) => {
 
 export const addTask = async (titleTask: string) => {
     try {
-        const response = await fetch('https://easydev.club/api/v1/todos', {
+        const response = await axios({
             method: 'POST',
-            body: JSON.stringify({
+            data: JSON.stringify({
                 isDone: false,
                 title: titleTask,
             }),
-            headers: {
-                accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
         })
-        return await response.json()
+        return await response.data
     } catch {
         throw new Error()
     }
@@ -30,18 +41,15 @@ export const addTask = async (titleTask: string) => {
 
 export const changeDataTask = async (id: number, titleTask: string, isDone: boolean) => {
     try {
-        const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
+        const response = await axios({
+            url: `/${id}`,
             method: 'PUT',
-            body: JSON.stringify({
+            data: JSON.stringify({
                 isDone: isDone,
                 title: titleTask,
             }),
-            headers: {
-                accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
         })
-        return await response.json()
+        return await response.data
     } catch {
         throw new Error()
     }
@@ -49,11 +57,9 @@ export const changeDataTask = async (id: number, titleTask: string, isDone: bool
 
 export const deleteTask = async (id: number) => {
     try {
-        await fetch(`https://easydev.club/api/v1/todos/${id}`, {
+        await axios({
+            url: `/${id}`,
             method: 'DELETE',
-            headers: {
-                accept: 'application/json',
-            },
         })
     } catch {
         throw new Error()
