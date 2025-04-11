@@ -1,6 +1,8 @@
 import { FC, useState } from 'react'
 import { EditFilled, DeleteFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
-import { Checkbox } from 'antd'
+import { Checkbox, Input, Button, Typography } from 'antd'
+
+const { Text } = Typography
 
 import classes from './TasksItem.module.css'
 
@@ -35,14 +37,14 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
         <div className={classes.task}>
             <div className={classes.leftContainer}>
                 <Checkbox defaultChecked={isDone} onClick={() => onChangeData(id, titleTask, !isDone)} />
-                <div className={classes.round}></div>
                 {!isEdited ? (
-                    <h3 className={isDone ? `${classes.checked}` : undefined}>{curTitleTask}</h3>
+                    <Text delete={isDone} className={classes.text}>
+                        {curTitleTask}
+                    </Text>
                 ) : (
-                    <input
+                    <Input
                         type="text"
                         className={classes.inputEdit}
-                        placeholder={curTitleTask}
                         value={curTitleTask}
                         maxLength={64}
                         onChange={event => handleChange(event.target.value)}
@@ -51,31 +53,31 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
             </div>
             <div className={classes.rightContainer}>
                 {!isEdited ? (
-                    <button className={`${classes.button} ${classes.blue}`} onClick={handleEdited}>
+                    <Button style={{ backgroundColor: '#0077ff' }} onClick={handleEdited}>
                         <EditFilled style={{ color: 'white', fontSize: '1rem' }} alt="edit" />
-                    </button>
+                    </Button>
                 ) : (
                     <>
-                        <button
-                            className={`${classes.button} ${classes.green}`}
+                        <Button
+                            style={{ backgroundColor: '#00a200' }}
                             onClick={() => {
                                 onChangeData(id, curTitleTask, isDone)
                                 handleEdited()
                             }}>
-                            <CheckCircleFilled style={{ fontSize: '1.4rem', color: 'white' }} alt="save" />
-                        </button>
-                        <button
-                            className={`${classes.button} ${classes.red}`}
+                            <CheckCircleFilled style={{ fontSize: '1rem', color: 'white' }} alt="save" />
+                        </Button>
+                        <Button
+                            style={{ backgroundColor: '#ff4747' }}
                             onClick={() => {
                                 handleCancel()
                             }}>
-                            <CloseCircleFilled style={{ fontSize: '1.4rem', color: 'white' }} alt="cancel" />
-                        </button>
+                            <CloseCircleFilled style={{ fontSize: '1rem', color: 'white' }} alt="cancel" />
+                        </Button>
                     </>
                 )}
-                <button className={`${classes.button} ${classes.red}`} onClick={() => onDelete(id)}>
+                <Button style={{ backgroundColor: '#ff4747' }} onClick={() => onDelete(id)}>
                     <DeleteFilled style={{ fontSize: '1rem', color: 'white' }} />
-                </button>
+                </Button>
             </div>
         </div>
     )
