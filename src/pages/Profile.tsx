@@ -1,5 +1,9 @@
+import { Typography } from 'antd'
+
+const { Text } = Typography
+
 const Profile = () => {
-    return <p>Привет!!!</p>
+    return <Text>Привет!!!</Text>
 }
 
 export default Profile

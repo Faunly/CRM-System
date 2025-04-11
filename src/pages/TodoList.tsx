@@ -1,4 +1,4 @@
-import { Flex, Tabs } from 'antd'
+import { Flex, Tabs, Typography } from 'antd'
 import TaskList from '../components/TaskList/TaskList'
 import { filterTypes } from '../types/filter'
 import { useCallback, useEffect, useState } from 'react'
@@ -76,7 +76,7 @@ const TodoList = () => {
                         }}
                     />
                     <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
-                    {isFetching && <h3>Fetching tasks...</h3>}
+                    {isFetching && <Typography.Title level={5}>Fetching tasks...</Typography.Title>}
                 </Flex>
             </Content>
         </Flex>

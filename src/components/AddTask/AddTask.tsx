@@ -1,7 +1,7 @@
 import { FC, memo, useState } from 'react'
 import classes from './AddTask.module.css'
 import { addTask } from '../../api/http.js'
-import { Input, Button, Form } from 'antd'
+import { Input, Button, Form, Flex } from 'antd'
 import type { FormProps } from 'antd'
 
 type AddTaskProps = {
@@ -39,7 +39,7 @@ const AddTask: FC<AddTaskProps> = memo(({ fetchTasksByCategories }) => {
 
     return (
         <Form form={form} onFinish={onFinish}>
-            <div className={classes.container}>
+            <Flex justify="center" align="end" gap="20px">
                 <Form.Item<FieldType>
                     name="todoTitle"
                     rules={[
@@ -63,7 +63,7 @@ const AddTask: FC<AddTaskProps> = memo(({ fetchTasksByCategories }) => {
                         Add
                     </Button>
                 </Form.Item>
-            </div>
+            </Flex>
         </Form>
     )
 })

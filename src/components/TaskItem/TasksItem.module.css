@@ -4,32 +4,16 @@
     background-color: white;
     border-radius: 10px;
     box-shadow: 2px 5px 5px #cdcdcd;
-    display: flex;
     height: 4rem;
-    justify-content: space-between;
 }
 
 .text {
     margin-left: 0.5rem;
     font-size: 1.4rem;
     text-wrap: nowrap;
-    max-width: 34rem;
+    max-width: 33rem;
     overflow: auto;
     scrollbar-width: none;
-}
-
-.task div {
-    display: flex;
-    align-items: center;
-}
-
-.task .leftContainer {
-    width: 100%;
-}
-
-.task .rightContainer {
-    gap: 10px;
-    padding-right: 0.5rem;
 }
 
 .inputEdit {

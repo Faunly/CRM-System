@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import { EditFilled, DeleteFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
-import { Checkbox, Input, Button, Typography } from 'antd'
+import { Checkbox, Input, Button, Typography, Flex } from 'antd'
 
 const { Text } = Typography
 
@@ -34,8 +34,8 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
     }
 
     return (
-        <div className={classes.task}>
-            <div className={classes.leftContainer}>
+        <Flex justify="space-between" className={classes.task}>
+            <Flex align="center" style={{ width: '100%' }}>
                 <Checkbox defaultChecked={isDone} onClick={() => onChangeData(id, titleTask, !isDone)} />
                 {!isEdited ? (
                     <Text delete={isDone} className={classes.text}>
@@ -50,8 +50,8 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
                         onChange={event => handleChange(event.target.value)}
                     />
                 )}
-            </div>
-            <div className={classes.rightContainer}>
+            </Flex>
+            <Flex align="center" gap="5px" style={{ paddingRight: '0.5rem' }}>
                 {!isEdited ? (
                     <Button style={{ backgroundColor: '#0077ff' }} onClick={handleEdited}>
                         <EditFilled style={{ color: 'white', fontSize: '1rem' }} alt="edit" />
@@ -78,8 +78,8 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
                 <Button style={{ backgroundColor: '#ff4747' }} onClick={() => onDelete(id)}>
                     <DeleteFilled style={{ fontSize: '1rem', color: 'white' }} />
                 </Button>
-            </div>
-        </div>
+            </Flex>
+        </Flex>
     )
 }
 
