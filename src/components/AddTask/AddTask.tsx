@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, memo, useState } from 'react'
 import classes from './AddTask.module.css'
 import { addTask } from '../../api/http.js'
 import { Input, Button, Form } from 'antd'
@@ -12,7 +12,7 @@ type FieldType = {
     todoTitle: string
 }
 
-const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
+const AddTask: FC<AddTaskProps> = memo(({ fetchTasksByCategories }) => {
     const [form] = Form.useForm<FieldType>()
     const [isFetching, setIsFetching] = useState(false)
 
@@ -20,7 +20,7 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
         try {
             setIsFetching(true)
             await addTask(form.getFieldValue('todoTitle'))
-            form.setFieldsValue({ todoTitle: '' })
+            form.resetFields(['todoTitle'])
             fetchTasksByCategories()
         } catch {
             setAndAlertError('Ошибка создания задачи!')
@@ -66,6 +66,6 @@ const AddTask: FC<AddTaskProps> = ({ fetchTasksByCategories }) => {
             </div>
         </Form>
     )
-}
+})
 
 export default AddTask
