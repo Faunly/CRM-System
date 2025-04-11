@@ -30,7 +30,7 @@ const TodoList = () => {
     useEffect(() => {
         const fetchData = () => {
             fetchTasksByCategories(filter)
-            console.log('update')
+            // console.log('update')
         }
 
         fetchData()

@@ -1,5 +1,6 @@
 import { FC, useState } from 'react'
 import { EditFilled, DeleteFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
+import { Checkbox } from 'antd'
 
 import classes from './TasksItem.module.css'
 
@@ -33,10 +34,8 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
     return (
         <div className={classes.task}>
             <div className={classes.leftContainer}>
-                <div className={classes.round}>
-                    <input type="checkbox" name="checkboxInput" defaultChecked={isDone} />
-                    <label htmlFor="checkboxInput" onClick={() => onChangeData(id, titleTask, !isDone)}></label>
-                </div>
+                <Checkbox defaultChecked={isDone} onClick={() => onChangeData(id, titleTask, !isDone)} />
+                <div className={classes.round}></div>
                 {!isEdited ? (
                     <h3 className={isDone ? `${classes.checked}` : undefined}>{curTitleTask}</h3>
                 ) : (
@@ -53,7 +52,7 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
             <div className={classes.rightContainer}>
                 {!isEdited ? (
                     <button className={`${classes.button} ${classes.blue}`} onClick={handleEdited}>
-                        <EditFilled style={{ color: 'white', fontSize: '1.4rem' }} alt="edit" />
+                        <EditFilled style={{ color: 'white', fontSize: '1rem' }} alt="edit" />
                     </button>
                 ) : (
                     <>
@@ -75,7 +74,7 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
                     </>
                 )}
                 <button className={`${classes.button} ${classes.red}`} onClick={() => onDelete(id)}>
-                    <DeleteFilled style={{ fontSize: '1.4rem', color: 'white' }} />
+                    <DeleteFilled style={{ fontSize: '1rem', color: 'white' }} />
                 </button>
             </div>
         </div>

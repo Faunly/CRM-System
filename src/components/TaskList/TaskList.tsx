@@ -12,6 +12,7 @@ type TaskListProps = {
 
 const TaskList: FC<TaskListProps> = ({ fetchTasksByCategories, tasks }) => {
     const [isFetching, setIsFetching] = useState(false)
+
     const handleDeleteTask = async (id: number) => {
         try {
             setIsFetching(true)
