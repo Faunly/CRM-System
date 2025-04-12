@@ -26,7 +26,6 @@ export const addTask = async (titleTask: string) => {
             isDone: false,
             title: titleTask,
         })
-        console.log(response)
         return response.data
     } catch {
         throw new Error()

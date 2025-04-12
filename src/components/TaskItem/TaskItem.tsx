@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import { EditFilled, DeleteFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
-import { Checkbox, Input, Button, Typography, Flex } from 'antd'
+import { Checkbox, Input, Button, Typography, Flex, Form, FormProps } from 'antd'
 
 const { Text } = Typography
 
@@ -14,18 +14,20 @@ type TaskItemProps = {
     onDelete: (id: number) => void
 }
 
+type FieldType = {
+    editTitleTask: string
+}
+
 const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDelete }) => {
+    const [form] = Form.useForm<FieldType>()
     const [isEdited, setIsEdited] = useState(false)
     const [curTitleTask, setCurTitleTask] = useState(titleTask)
     const [prevTaskTitle, setPrevTaskTitle] = useState('')
 
     const handleEdited = () => {
         setIsEdited(prevState => !prevState)
+        form.setFieldValue(['editTitleTask'], curTitleTask)
         setPrevTaskTitle(curTitleTask)
-    }
-
-    const handleChange = (newValue: string) => {
-        setCurTitleTask(newValue)
     }
 
     const handleCancel = () => {
@@ -33,53 +35,65 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
         setIsEdited(prevState => !prevState)
     }
 
+    const onFinish: FormProps<FieldType>['onFinish'] = value => {
+        onChangeData(id, value.editTitleTask, isDone)
+    }
+
     return (
-        <Flex justify="space-between" className={classes.task}>
-            <Flex align="center" style={{ width: '100%' }}>
-                <Checkbox defaultChecked={isDone} onClick={() => onChangeData(id, titleTask, !isDone)} />
-                {!isEdited ? (
-                    <Text delete={isDone} className={classes.text}>
-                        {curTitleTask}
-                    </Text>
-                ) : (
-                    <Input
-                        type="text"
-                        className={classes.inputEdit}
-                        value={curTitleTask}
-                        maxLength={64}
-                        onChange={event => handleChange(event.target.value)}
-                    />
-                )}
-            </Flex>
-            <Flex align="center" gap="5px" style={{ paddingRight: '0.5rem' }}>
-                {!isEdited ? (
-                    <Button style={{ backgroundColor: '#0077ff' }} onClick={handleEdited}>
-                        <EditFilled style={{ color: 'white', fontSize: '1rem' }} alt="edit" />
+        <Form form={form} onFinish={onFinish}>
+            <Flex justify="space-between" className={classes.task}>
+                <Flex align="center" gap={'0.5rem'} style={{ width: '100%' }}>
+                    <Checkbox defaultChecked={isDone} onClick={() => onChangeData(id, titleTask, !isDone)} />
+                    {!isEdited ? (
+                        <Text delete={isDone} className={classes.text}>
+                            {curTitleTask}
+                        </Text>
+                    ) : (
+                        <Form.Item<FieldType>
+                            name="editTitleTask"
+                            style={{ margin: 0, width: '95%' }}
+                            rules={[
+                                {
+                                    required: true,
+                                    min: 2,
+                                    message: 'Нельзя изменить задачу с количеством символов в названии меньше 2-х!',
+                                },
+                                {
+                                    max: 64,
+                                    message: 'Нельзя изменить задачу с количеством символов в названии больше 64-х!',
+                                },
+                            ]}>
+                            <Input type="text" className={classes.inputEdit} maxLength={64} />
+                        </Form.Item>
+                    )}
+                </Flex>
+                <Flex align="center" gap="5px" style={{ paddingRight: '0.5rem' }}>
+                    {!isEdited ? (
+                        <Button style={{ backgroundColor: '#0077ff' }} onClick={handleEdited}>
+                            <EditFilled style={{ color: 'white', fontSize: '1rem' }} alt="edit" />
+                        </Button>
+                    ) : (
+                        <>
+                            <Form.Item style={{ margin: 0 }}>
+                                <Button style={{ backgroundColor: '#00a200' }} htmlType="submit">
+                                    <CheckCircleFilled style={{ fontSize: '1rem', color: 'white' }} alt="save" />
+                                </Button>
+                            </Form.Item>
+                            <Button
+                                style={{ backgroundColor: '#ff4747' }}
+                                onClick={() => {
+                                    handleCancel()
+                                }}>
+                                <CloseCircleFilled style={{ fontSize: '1rem', color: 'white' }} alt="cancel" />
+                            </Button>
+                        </>
+                    )}
+                    <Button style={{ backgroundColor: '#ff4747' }} onClick={() => onDelete(id)}>
+                        <DeleteFilled style={{ fontSize: '1rem', color: 'white' }} />
                     </Button>
-                ) : (
-                    <>
-                        <Button
-                            style={{ backgroundColor: '#00a200' }}
-                            onClick={() => {
-                                onChangeData(id, curTitleTask, isDone)
-                                handleEdited()
-                            }}>
-                            <CheckCircleFilled style={{ fontSize: '1rem', color: 'white' }} alt="save" />
-                        </Button>
-                        <Button
-                            style={{ backgroundColor: '#ff4747' }}
-                            onClick={() => {
-                                handleCancel()
-                            }}>
-                            <CloseCircleFilled style={{ fontSize: '1rem', color: 'white' }} alt="cancel" />
-                        </Button>
-                    </>
-                )}
-                <Button style={{ backgroundColor: '#ff4747' }} onClick={() => onDelete(id)}>
-                    <DeleteFilled style={{ fontSize: '1rem', color: 'white' }} />
-                </Button>
+                </Flex>
             </Flex>
-        </Flex>
+        </Form>
     )
 }
 

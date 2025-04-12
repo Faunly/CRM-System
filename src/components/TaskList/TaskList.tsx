@@ -17,7 +17,7 @@ const TaskList: FC<TaskListProps> = ({ fetchTasksByCategories, tasks }) => {
         try {
             setIsFetching(true)
             await deleteTask(id)
-            fetchTasksByCategories()
+            await fetchTasksByCategories()
         } catch {
             setAndAlertError('Ошибка удаления задачи!')
         } finally {
