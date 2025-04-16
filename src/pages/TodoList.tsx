@@ -5,13 +5,37 @@ import { useCallback, useEffect, useState } from 'react'
 import { CategoriesType, TasksType } from '../types/todolist'
 import { Content, Header } from 'antd/es/layout/layout'
 import AddTask from '../components/AddTask/AddTask'
-import { getTasksByCategory } from '../api/http'
+import { changeDataTask, deleteTask, getTasksByCategory } from '../api/http'
 
 const TodoList = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
     const [filter, setFilter] = useState<filterTypes>('all')
     const [infoTasks, setInfoTasks] = useState<CategoriesType>()
     const [isFetching, setIsFetching] = useState(false)
+
+    const handleDeleteTask = async (id: number) => {
+        try {
+            setIsFetching(true)
+            await deleteTask(id)
+            await fetchTasksByFilter()
+        } catch {
+            setAndAlertError('Ошибка удаления задачи!')
+        } finally {
+            setIsFetching(false)
+        }
+    }
+
+    const handleChangeDataTask = async (id: number, titleTask: string, isDone: boolean) => {
+        try {
+            setIsFetching(true)
+            await changeDataTask(id, titleTask, isDone)
+            await fetchTasksByFilter()
+        } catch {
+            setAndAlertError('Ошибка изменения задачи!')
+        } finally {
+            setIsFetching(false)
+        }
+    }
 
     const fetchTasksByFilter = useCallback(
         async (fetchFilter = filter) => {
@@ -74,7 +98,12 @@ const TodoList = () => {
                             setFilter(activeKey as filterTypes)
                         }}
                     />
-                    <TaskList tasks={tasks} fetchTasksByFilter={fetchTasksByFilter} />
+                    <TaskList
+                        tasks={tasks}
+                        fetchTasksByFilter={fetchTasksByFilter}
+                        handleDeleteTask={handleDeleteTask}
+                        handleChangeDataTask={handleChangeDataTask}
+                    />
                     {isFetching && <Typography.Title level={5}>Fetching tasks...</Typography.Title>}
                 </Flex>
             </Content>
