@@ -8,10 +8,10 @@ type CategoriesListProps = {
     isFetching: boolean
     filter: filterTypes
     categories?: CategoriesType
-    fetchTasksByCategories: (filter: filterTypes) => void
+    fetchTasksByfilter: (filter: filterTypes) => void
 }
 
-const CategoriesList: FC<CategoriesListProps> = ({ isFetching, categories, filter, fetchTasksByCategories }) => {
+const CategoriesList: FC<CategoriesListProps> = ({ isFetching, categories, filter, fetchTasksByfilter }) => {
     return (
         !isFetching &&
         categories && (
@@ -20,19 +20,19 @@ const CategoriesList: FC<CategoriesListProps> = ({ isFetching, categories, filte
                     curFilter={filter}
                     meta={{ title: 'Все', filterTitle: 'all' }}
                     amount={categories && Object.values(categories)[0]}
-                    onChangeFilter={fetchTasksByCategories}
+                    onChangeFilter={fetchTasksByfilter}
                 />
                 <CategoriesItem
                     curFilter={filter}
                     meta={{ title: 'В работе', filterTitle: 'inWork' }}
                     amount={Object.values(categories)[2]}
-                    onChangeFilter={fetchTasksByCategories}
+                    onChangeFilter={fetchTasksByfilter}
                 />
                 <CategoriesItem
                     curFilter={filter}
                     meta={{ title: 'Сделано', filterTitle: 'completed' }}
                     amount={Object.values(categories)[1]}
-                    onChangeFilter={fetchTasksByCategories}
+                    onChangeFilter={fetchTasksByfilter}
                 />
             </ul>
         )

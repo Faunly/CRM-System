@@ -5,14 +5,14 @@ import { Input, Button, Form, Flex } from 'antd'
 import type { FormProps } from 'antd'
 
 type AddTaskProps = {
-    fetchTasksByCategories: () => void
+    fetchTasksByFilter: () => void
 }
 
 type FieldType = {
     todoTitle: string
 }
 
-const AddTask: FC<AddTaskProps> = memo(({ fetchTasksByCategories }) => {
+const AddTask: FC<AddTaskProps> = memo(({ fetchTasksByFilter }) => {
     const [form] = Form.useForm<FieldType>()
     const [isFetching, setIsFetching] = useState(false)
 
@@ -21,7 +21,7 @@ const AddTask: FC<AddTaskProps> = memo(({ fetchTasksByCategories }) => {
             setIsFetching(true)
             await addTask(form.getFieldValue('todoTitle'))
             form.resetFields(['todoTitle'])
-            fetchTasksByCategories()
+            fetchTasksByFilter()
         } catch {
             setAndAlertError('Ошибка создания задачи!')
         } finally {

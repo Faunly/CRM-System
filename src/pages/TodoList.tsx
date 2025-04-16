@@ -13,28 +13,27 @@ const TodoList = () => {
     const [infoTasks, setInfoTasks] = useState<CategoriesType>()
     const [isFetching, setIsFetching] = useState(false)
 
-    const fetchTasksByCategories = useCallback(async (filter: filterTypes) => {
-        try {
-            setIsFetching(true)
-            const todos = await getTasksByCategory(filter)
-            setTasks(todos.data)
-            setInfoTasks(todos.info)
-            setFilter(filter)
-        } catch {
-            setAndAlertError('Ошибка получения задач!')
-        } finally {
-            setIsFetching(false)
-        }
-    }, [])
+    const fetchTasksByFilter = useCallback(
+        async (fetchFilter = filter) => {
+            try {
+                setIsFetching(true)
+                const todos = await getTasksByCategory(fetchFilter)
+                setTasks(todos.data)
+                setInfoTasks(todos.info)
+            } catch {
+                setAndAlertError('Ошибка получения задач!')
+            } finally {
+                setIsFetching(false)
+            }
+        },
+        [filter],
+    )
 
     useEffect(() => {
-        const fetchData = () => {
-            fetchTasksByCategories(filter)
-            // console.log('update')
-        }
-
-        fetchData()
-        const refetch = setInterval(fetchData, 5000)
+        fetchTasksByFilter()
+        const refetch = setInterval(() => {
+            fetchTasksByFilter()
+        }, 5000)
 
         return () => clearInterval(refetch)
     }, [filter])
@@ -61,7 +60,7 @@ const TodoList = () => {
     return (
         <Flex vertical style={{ alignItems: 'center', width: '100%', overflowY: 'hidden' }}>
             <Header style={{ backgroundColor: 'transparent', margin: '0.5rem 0 0 0' }}>
-                <AddTask fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
+                <AddTask fetchTasksByFilter={fetchTasksByFilter} />
             </Header>
             <Content>
                 <Flex vertical align="center">
@@ -72,10 +71,10 @@ const TodoList = () => {
                         centered
                         size="large"
                         onChange={(activeKey: string) => {
-                            fetchTasksByCategories(activeKey as filterTypes)
+                            setFilter(activeKey as filterTypes)
                         }}
                     />
-                    <TaskList tasks={tasks} fetchTasksByCategories={() => fetchTasksByCategories(filter)} />
+                    <TaskList tasks={tasks} fetchTasksByFilter={fetchTasksByFilter} />
                     {isFetching && <Typography.Title level={5}>Fetching tasks...</Typography.Title>}
                 </Flex>
             </Content>

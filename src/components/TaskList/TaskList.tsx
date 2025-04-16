@@ -7,17 +7,17 @@ import classes from './TaskList.module.css'
 
 type TaskListProps = {
     tasks: TasksType[]
-    fetchTasksByCategories: () => void
+    fetchTasksByFilter: () => void
 }
 
-const TaskList: FC<TaskListProps> = ({ fetchTasksByCategories, tasks }) => {
+const TaskList: FC<TaskListProps> = ({ fetchTasksByFilter, tasks }) => {
     const [isFetching, setIsFetching] = useState(false)
 
     const handleDeleteTask = async (id: number) => {
         try {
             setIsFetching(true)
             await deleteTask(id)
-            await fetchTasksByCategories()
+            await fetchTasksByFilter()
         } catch {
             setAndAlertError('Ошибка удаления задачи!')
         } finally {
@@ -29,7 +29,7 @@ const TaskList: FC<TaskListProps> = ({ fetchTasksByCategories, tasks }) => {
         try {
             setIsFetching(true)
             await changeDataTask(id, titleTask, isDone)
-            await fetchTasksByCategories()
+            await fetchTasksByFilter()
         } catch {
             setAndAlertError('Ошибка изменения задачи!')
         } finally {
