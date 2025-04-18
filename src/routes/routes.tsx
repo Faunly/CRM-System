@@ -1,6 +1,6 @@
 import { RouteObject, useRoutes } from 'react-router-dom'
-import Profile from '../pages/Profile'
-import TodoList from '../pages/TodoList'
+import Profile from '../pages/ProfilePage'
+import TodoList from '../pages/TodoListPage'
 import { Navigate } from 'react-router'
 
 const routesConfig: RouteObject[] = [

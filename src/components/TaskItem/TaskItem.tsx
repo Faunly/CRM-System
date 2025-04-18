@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import { EditFilled, DeleteFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
-import { Checkbox, Input, Button, Typography, Flex, Form, FormProps } from 'antd'
+import { Checkbox, Input, Button, Typography, Flex, Form } from 'antd'
 
 const { Text } = Typography
 
@@ -35,7 +35,7 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
         setIsEdited(prevState => !prevState)
     }
 
-    const onFinish: FormProps<FieldType>['onFinish'] = value => {
+    const onFinish = (value: FieldType) => {
         onChangeData(id, value.editTitleTask, isDone)
     }
 

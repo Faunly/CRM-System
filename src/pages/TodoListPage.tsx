@@ -3,13 +3,13 @@ import { changeDataTask, deleteTask, getTasksByCategory } from '../api/http'
 import { Flex, Tabs, message, notification } from 'antd'
 import { Content, Header } from 'antd/es/layout/layout'
 import { CategoriesType, TasksType } from '../types/todolist'
-import { filterTypes } from '../types/filter'
+import { FilterTypes } from '../types/filter'
 import AddTask from '../components/AddTask/AddTask'
 import TaskList from '../components/TaskList/TaskList'
 
 const TodoList = () => {
     const [tasks, setTasks] = useState<TasksType[]>([])
-    const [filter, setFilter] = useState<filterTypes>('all')
+    const [filter, setFilter] = useState<FilterTypes>('all')
     const [infoTasks, setInfoTasks] = useState<CategoriesType>()
     const [messageApi, messageContextHolder] = message.useMessage()
     const [notificationApi, notificationContextHolder] = notification.useNotification()
@@ -72,7 +72,7 @@ const TodoList = () => {
         return () => clearInterval(refetch)
     }, [filter])
 
-    const itemsTabs: { key: filterTypes; label: string }[] = [
+    const itemsTabs: { key: FilterTypes; label: string }[] = [
         {
             key: 'all',
             label: `Все (${infoTasks?.all})`,
@@ -101,7 +101,7 @@ const TodoList = () => {
                         centered
                         size="large"
                         onChange={(activeKey: string) => {
-                            setFilter(activeKey as filterTypes)
+                            setFilter(activeKey as FilterTypes)
                         }}
                     />
                     <TaskList
