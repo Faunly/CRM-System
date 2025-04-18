@@ -7,11 +7,9 @@ import classes from './TaskList.module.css'
 type TaskListProps = {
     tasks: TasksType[]
     fetchTasksByFilter: () => void
-    handleDeleteTask: (id: number) => void
-    handleChangeDataTask: (id: number, titleTask: string, isDone: boolean) => void
 }
 
-const TaskList: FC<TaskListProps> = ({ tasks, handleDeleteTask, handleChangeDataTask }) => {
+const TaskList: FC<TaskListProps> = ({ tasks, fetchTasksByFilter }) => {
     return (
         <List className={classes.tasklist}>
             {tasks.map(task => (
@@ -20,8 +18,7 @@ const TaskList: FC<TaskListProps> = ({ tasks, handleDeleteTask, handleChangeData
                     id={task.id}
                     titleTask={task.title}
                     isDone={task.isDone}
-                    onChangeData={handleChangeDataTask}
-                    onDelete={handleDeleteTask}
+                    fetchTasksByFilter={fetchTasksByFilter}
                 />
             ))}
         </List>

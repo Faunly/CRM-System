@@ -1,28 +1,56 @@
 import { FC, useState } from 'react'
 import { EditFilled, DeleteFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
-import { Checkbox, Input, Button, Typography, Flex, Form } from 'antd'
+import { Checkbox, Input, Button, Typography, Flex, Form, notification } from 'antd'
 
 const { Text } = Typography
 
 import classes from './TasksItem.module.css'
+import { deleteTask, changeDataTask } from '../../api/http'
 
 type TaskItemProps = {
     id: number
     titleTask: string
     isDone: boolean
-    onChangeData: (id: number, titleTask: string, isDone: boolean) => void
-    onDelete: (id: number) => void
+    fetchTasksByFilter: () => void
 }
 
 type FieldType = {
     editTitleTask: string
 }
 
-const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDelete }) => {
+const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, fetchTasksByFilter }) => {
     const [form] = Form.useForm<FieldType>()
     const [isEdited, setIsEdited] = useState(false)
     const [curTitleTask, setCurTitleTask] = useState(titleTask)
     const [prevTaskTitle, setPrevTaskTitle] = useState('')
+    const [notificationApi, notificationContextHolder] = notification.useNotification()
+
+    const showAlert = (error: string) => {
+        notificationApi.error({
+            message: `${error}`,
+            placement: 'top',
+            showProgress: true,
+            pauseOnHover: false,
+        })
+    }
+
+    const handleDeleteTask = async (id: number) => {
+        try {
+            await deleteTask(id)
+            await fetchTasksByFilter()
+        } catch {
+            showAlert('Ошибка удаления задачи!')
+        }
+    }
+
+    const handleChangeDataTask = async (id: number, titleTask: string, isDone: boolean) => {
+        try {
+            await changeDataTask(id, titleTask, isDone)
+            await fetchTasksByFilter()
+        } catch {
+            showAlert('Ошибка изменения задачи!')
+        }
+    }
 
     const handleEdited = () => {
         setIsEdited(prevState => !prevState)
@@ -36,17 +64,17 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
     }
 
     const onFinish = (value: FieldType) => {
-        onChangeData(id, value.editTitleTask, isDone)
+        handleChangeDataTask(id, value.editTitleTask, isDone)
     }
 
     return (
         <Form form={form} onFinish={onFinish}>
             <Flex justify="space-between" className={classes.task}>
                 <Flex align="center" gap={'0.5rem'} style={{ width: '100%' }}>
-                    <Checkbox defaultChecked={isDone} onClick={() => onChangeData(id, titleTask, !isDone)} />
+                    <Checkbox defaultChecked={isDone} onClick={() => handleChangeDataTask(id, titleTask, !isDone)} />
                     {!isEdited ? (
                         <Text delete={isDone} className={classes.text}>
-                            {curTitleTask}
+                            {curTitleTask} {isDone}
                         </Text>
                     ) : (
                         <Form.Item<FieldType>
@@ -88,11 +116,12 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, onChangeData, onDe
                             </Button>
                         </>
                     )}
-                    <Button style={{ backgroundColor: '#ff4747' }} onClick={() => onDelete(id)}>
+                    <Button style={{ backgroundColor: '#ff4747' }} onClick={() => handleDeleteTask(id)}>
                         <DeleteFilled style={{ fontSize: '1rem', color: 'white' }} />
                     </Button>
                 </Flex>
             </Flex>
+            {notificationContextHolder}
         </Form>
     )
 }

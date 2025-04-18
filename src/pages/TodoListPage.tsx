@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { changeDataTask, deleteTask, getTasksByCategory } from '../api/http'
+import { getTasksByCategory } from '../api/http'
 import { Flex, Tabs, message, notification } from 'antd'
 import { Content, Header } from 'antd/es/layout/layout'
 import { CategoriesType, TasksType } from '../types/todolist'
@@ -23,36 +23,15 @@ const TodoList = () => {
         })
     }
 
-    const handleDeleteTask = async (id: number) => {
+    const fetchTasksByFilter = useCallback(async () => {
         try {
-            await deleteTask(id)
-            await fetchTasksByFilter()
+            const todos = await getTasksByCategory(filter)
+            setTasks(todos.data)
+            setInfoTasks(todos.info)
         } catch {
-            showAlert('Ошибка удаления задачи!')
+            showAlert('Ошибка получения задач!')
         }
-    }
-
-    const handleChangeDataTask = async (id: number, titleTask: string, isDone: boolean) => {
-        try {
-            await changeDataTask(id, titleTask, isDone)
-            await fetchTasksByFilter()
-        } catch {
-            showAlert('Ошибка изменения задачи!')
-        }
-    }
-
-    const fetchTasksByFilter = useCallback(
-        async (fetchFilter = filter) => {
-            try {
-                const todos = await getTasksByCategory(fetchFilter)
-                setTasks(todos.data)
-                setInfoTasks(todos.info)
-            } catch {
-                showAlert('Ошибка получения задач!')
-            }
-        },
-        [filter],
-    )
+    }, [filter])
 
     useEffect(() => {
         messageApi.open({
@@ -65,9 +44,7 @@ const TodoList = () => {
     useEffect(() => {
         fetchTasksByFilter()
 
-        const refetch = setInterval(() => {
-            fetchTasksByFilter()
-        }, 5000)
+        const refetch = setInterval(fetchTasksByFilter, 5000)
 
         return () => clearInterval(refetch)
     }, [filter])
@@ -104,12 +81,7 @@ const TodoList = () => {
                             setFilter(activeKey as FilterTypes)
                         }}
                     />
-                    <TaskList
-                        tasks={tasks}
-                        fetchTasksByFilter={fetchTasksByFilter}
-                        handleDeleteTask={handleDeleteTask}
-                        handleChangeDataTask={handleChangeDataTask}
-                    />
+                    <TaskList tasks={tasks} fetchTasksByFilter={fetchTasksByFilter} />
                     {messageContextHolder}
                     {notificationContextHolder}
                 </Flex>
