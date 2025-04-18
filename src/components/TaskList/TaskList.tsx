@@ -1,52 +1,27 @@
 import TaskItem from '../TaskItem/TaskItem.js'
-import { changeDataTask, deleteTask } from '../../api/http.js'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { TasksType } from '../../types/todolist.ts'
+import { List } from 'antd'
+import classes from './TaskList.module.css'
 
 type TaskListProps = {
     tasks: TasksType[]
-    setError: (value: string) => void
-    fetchTasksByCategories: () => void
+    fetchTasksByFilter: () => void
 }
 
-const TaskList: FC<TaskListProps> = ({ setError, fetchTasksByCategories, tasks }) => {
-    const [isFetching, setIsFetching] = useState(false)
-    const handleDeleteTask = async (id: number) => {
-        try {
-            setIsFetching(true)
-            await deleteTask(id)
-        } catch (error) {
-            setError(error as string)
-        } finally {
-            setIsFetching(false)
-            fetchTasksByCategories()
-        }
-    }
-
-    const handleChangeDataTask = async (id: number, titleTask: string, isDone: boolean) => {
-        try {
-            setIsFetching(true)
-            await changeDataTask(id, titleTask, isDone)
-        } catch (error) {
-            setError(error as string)
-        } finally {
-            setIsFetching(false)
-            fetchTasksByCategories()
-        }
-    }
-
+const TaskList: FC<TaskListProps> = ({ tasks, fetchTasksByFilter }) => {
     return (
-        !isFetching &&
-        tasks.map(task => (
-            <TaskItem
-                key={task.id}
-                id={task.id}
-                titleTask={task.title}
-                isDone={task.isDone}
-                onChangeData={handleChangeDataTask}
-                onDelete={handleDeleteTask}
-            />
-        ))
+        <List className={classes.tasklist}>
+            {tasks.map(task => (
+                <TaskItem
+                    key={task.id}
+                    id={task.id}
+                    titleTask={task.title}
+                    isDone={task.isDone}
+                    fetchTasksByFilter={fetchTasksByFilter}
+                />
+            ))}
+        </List>
     )
 }
 

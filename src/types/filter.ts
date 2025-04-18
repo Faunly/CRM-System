@@ -1,1 +1,1 @@
-export type filterTypes = 'all' | 'inWork' | 'completed'
+export type FilterTypes = 'all' | 'inWork' | 'completed'

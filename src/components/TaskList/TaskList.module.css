@@ -1,0 +1,9 @@
+.tasklist {
+    width: 45rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0px;
+    max-height: 75vh;
+    overflow-y: auto;
+}

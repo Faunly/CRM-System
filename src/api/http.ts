@@ -1,9 +1,20 @@
-import { filterTypes } from '../types/filter'
+import { filterTypes } from './../types/filter'
+import axios from 'axios'
+
+const instanceAxios = axios.create({
+    baseURL: 'https://easydev.club/api/v1',
+    headers: {
+        accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+})
 
 export const getTasksByCategory = async (filter: filterTypes) => {
     try {
-        const response = await fetch(`https://easydev.club/api/v1/todos?filter=${filter}`)
-        return await response.json()
+        const response = await instanceAxios.get('/todos', {
+            params: { filter },
+        })
+        return await response.data
     } catch {
         throw new Error()
     }
@@ -11,18 +22,11 @@ export const getTasksByCategory = async (filter: filterTypes) => {
 
 export const addTask = async (titleTask: string) => {
     try {
-        const response = await fetch('https://easydev.club/api/v1/todos', {
-            method: 'POST',
-            body: JSON.stringify({
-                isDone: false,
-                title: titleTask,
-            }),
-            headers: {
-                accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
+        const response = await instanceAxios.post('/todos', {
+            isDone: false,
+            title: titleTask,
         })
-        return await response.json()
+        return response.data
     } catch {
         throw new Error()
     }
@@ -30,18 +34,11 @@ export const addTask = async (titleTask: string) => {
 
 export const changeDataTask = async (id: number, titleTask: string, isDone: boolean) => {
     try {
-        const response = await fetch(`https://easydev.club/api/v1/todos/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                isDone: isDone,
-                title: titleTask,
-            }),
-            headers: {
-                accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
+        const response = await instanceAxios.put(`/todos/${id}`, {
+            isDone: isDone,
+            title: titleTask,
         })
-        return await response.json()
+        return await response.data
     } catch {
         throw new Error()
     }
@@ -49,12 +46,7 @@ export const changeDataTask = async (id: number, titleTask: string, isDone: bool
 
 export const deleteTask = async (id: number) => {
     try {
-        await fetch(`https://easydev.club/api/v1/todos/${id}`, {
-            method: 'DELETE',
-            headers: {
-                accept: 'application/json',
-            },
-        })
+        await instanceAxios.delete(`/todos/${id}`)
     } catch {
         throw new Error()
     }
