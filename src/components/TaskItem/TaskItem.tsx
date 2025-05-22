@@ -65,6 +65,7 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, fetchTasksByFilter
 
     const onFinish = (value: FieldType) => {
         handleChangeDataTask(id, value.editTitleTask, isDone)
+        setIsEdited(prevState => !prevState)
     }
 
     return (
