@@ -1,38 +1,40 @@
-import { useState } from 'react'
-import { Layout, Menu } from 'antd'
-import { ContainerOutlined, UserOutlined } from '@ant-design/icons'
-import type { MenuProps } from 'antd'
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router';
+import AppRoutes from './routes/routes.tsx';
+import { Layout, Menu } from 'antd';
+import { ContainerOutlined, UserOutlined } from '@ant-design/icons';
+import type { MenuProps } from 'antd';
 
-type MenuItem = Required<MenuProps>['items'][number]
-const { Sider } = Layout
-
-import { useNavigate } from 'react-router'
-import AppRoutes from './routes/routes.tsx'
+type MenuItem = Required<MenuProps>['items'][number];
+const { Sider } = Layout;
 
 const App = () => {
-    const [siderItem, setSiderItem] = useState('todo')
+    const [siderItem, setSiderItem] = useState('todo');
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const itemsSider: MenuItem[] = [
         { key: 'todo', icon: <ContainerOutlined />, label: 'Todo-List', onClick: () => navigate('/todo') },
         { key: 'profile', icon: <UserOutlined />, label: 'Профиль', onClick: () => navigate('/profile') },
-    ]
+    ];
 
     return (
         <Layout hasSider style={{ height: '100vh' }}>
-            <Sider theme="light">
-                <Menu
-                    items={itemsSider}
-                    mode="inline"
-                    defaultSelectedKeys={[`${siderItem}`]}
-                    onSelect={key => {
-                        setSiderItem(key.key)
-                    }}></Menu>
-            </Sider>
+            {location.pathname !== '/login' && (
+                <Sider theme="light">
+                    <Menu
+                        items={itemsSider}
+                        mode="inline"
+                        defaultSelectedKeys={[`${siderItem}`]}
+                        onSelect={key => {
+                            setSiderItem(key.key);
+                        }}></Menu>
+                </Sider>
+            )}
             <AppRoutes />
         </Layout>
-    )
-}
+    );
+};
 
-export default App
+export default App;

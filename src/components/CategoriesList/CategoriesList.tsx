@@ -1,15 +1,15 @@
-import classes from './CategoriesList.module.css'
-import { FC } from 'react'
-import CategoriesItem from '../CategoriesItem/CategoriesItem'
-import { CategoriesType } from '../../types/todolist'
-import { filterTypes } from '../../types/filter'
+import classes from './CategoriesList.module.css';
+import { FC } from 'react';
+import CategoriesItem from '../CategoriesItem/CategoriesItem';
+import { CategoriesType } from '../../types/todolist';
+import { FilterTypes } from '../../types/filter';
 
 type CategoriesListProps = {
-    isFetching: boolean
-    filter: filterTypes
-    categories?: CategoriesType
-    fetchTasksByfilter: (filter: filterTypes) => void
-}
+    isFetching: boolean;
+    filter: FilterTypes;
+    categories?: CategoriesType;
+    fetchTasksByfilter: (filter: FilterTypes) => void;
+};
 
 const CategoriesList: FC<CategoriesListProps> = ({ isFetching, categories, filter, fetchTasksByfilter }) => {
     return (
@@ -36,7 +36,7 @@ const CategoriesList: FC<CategoriesListProps> = ({ isFetching, categories, filte
                 />
             </ul>
         )
-    )
-}
+    );
+};
 
-export default CategoriesList
+export default CategoriesList;

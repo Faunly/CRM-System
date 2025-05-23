@@ -1,29 +1,29 @@
-import { FC, useState } from 'react'
-import { EditFilled, DeleteFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons'
-import { Checkbox, Input, Button, Typography, Flex, Form, notification } from 'antd'
+import { FC, useState } from 'react';
+import { EditFilled, DeleteFilled, CloseCircleFilled, CheckCircleFilled } from '@ant-design/icons';
+import { Checkbox, Input, Button, Typography, Flex, Form, notification } from 'antd';
 
-const { Text } = Typography
+const { Text } = Typography;
 
-import classes from './TasksItem.module.css'
-import { deleteTask, changeDataTask } from '../../api/http'
+import classes from './TasksItem.module.css';
+import { deleteTask, changeDataTask } from '../../api/http';
 
 type TaskItemProps = {
-    id: number
-    titleTask: string
-    isDone: boolean
-    fetchTasksByFilter: () => void
-}
+    id: number;
+    titleTask: string;
+    isDone: boolean;
+    fetchTasksByFilter: () => void;
+};
 
 type FieldType = {
-    editTitleTask: string
-}
+    editTitleTask: string;
+};
 
 const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, fetchTasksByFilter }) => {
-    const [form] = Form.useForm<FieldType>()
-    const [isEdited, setIsEdited] = useState(false)
-    const [curTitleTask, setCurTitleTask] = useState(titleTask)
-    const [prevTaskTitle, setPrevTaskTitle] = useState('')
-    const [notificationApi, notificationContextHolder] = notification.useNotification()
+    const [form] = Form.useForm<FieldType>();
+    const [isEdited, setIsEdited] = useState(false);
+    const [curTitleTask, setCurTitleTask] = useState(titleTask);
+    const [prevTaskTitle, setPrevTaskTitle] = useState('');
+    const [notificationApi, notificationContextHolder] = notification.useNotification();
 
     const showAlert = (error: string) => {
         notificationApi.error({
@@ -31,41 +31,41 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, fetchTasksByFilter
             placement: 'top',
             showProgress: true,
             pauseOnHover: false,
-        })
-    }
+        });
+    };
 
     const handleDeleteTask = async (id: number) => {
         try {
-            await deleteTask(id)
-            await fetchTasksByFilter()
+            await deleteTask(id);
+            await fetchTasksByFilter();
         } catch {
-            showAlert('Ошибка удаления задачи!')
+            showAlert('Ошибка удаления задачи!');
         }
-    }
+    };
 
     const handleChangeDataTask = async (id: number, titleTask: string, isDone: boolean) => {
         try {
-            await changeDataTask(id, titleTask, isDone)
-            await fetchTasksByFilter()
+            await changeDataTask(id, titleTask, isDone);
+            await fetchTasksByFilter();
         } catch {
-            showAlert('Ошибка изменения задачи!')
+            showAlert('Ошибка изменения задачи!');
         }
-    }
+    };
 
     const handleEdited = () => {
-        setIsEdited(prevState => !prevState)
-        form.setFieldValue(['editTitleTask'], curTitleTask)
-        setPrevTaskTitle(curTitleTask)
-    }
+        setIsEdited(prevState => !prevState);
+        form.setFieldValue(['editTitleTask'], curTitleTask);
+        setPrevTaskTitle(curTitleTask);
+    };
 
     const handleCancel = () => {
-        setCurTitleTask(prevTaskTitle)
-        setIsEdited(prevState => !prevState)
-    }
+        setCurTitleTask(prevTaskTitle);
+        setIsEdited(prevState => !prevState);
+    };
 
     const onFinish = (value: FieldType) => {
-        handleChangeDataTask(id, value.editTitleTask, isDone)
-    }
+        handleChangeDataTask(id, value.editTitleTask, isDone);
+    };
 
     return (
         <Form form={form} onFinish={onFinish}>
@@ -110,7 +110,7 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, fetchTasksByFilter
                             <Button
                                 style={{ backgroundColor: '#ff4747' }}
                                 onClick={() => {
-                                    handleCancel()
+                                    handleCancel();
                                 }}>
                                 <CloseCircleFilled style={{ fontSize: '1rem', color: 'white' }} alt="cancel" />
                             </Button>
@@ -123,7 +123,7 @@ const TaskItem: FC<TaskItemProps> = ({ id, titleTask, isDone, fetchTasksByFilter
             </Flex>
             {notificationContextHolder}
         </Form>
-    )
-}
+    );
+};
 
-export default TaskItem
+export default TaskItem;
