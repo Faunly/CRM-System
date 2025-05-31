@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import {useState} from 'react';
+import {useLocation, useNavigate} from 'react-router';
 import AppRoutes from './routes/routes.tsx';
-import { Layout, Menu } from 'antd';
-import { ContainerOutlined, UserOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
+import type {MenuProps} from 'antd';
+import {Layout, Menu} from 'antd';
+import {ContainerOutlined, UserOutlined} from '@ant-design/icons';
 
 type MenuItem = Required<MenuProps>['items'][number];
-const { Sider } = Layout;
+const {Sider} = Layout;
 
 const App = () => {
     const [siderItem, setSiderItem] = useState('todo');
@@ -15,13 +15,13 @@ const App = () => {
     const location = useLocation();
 
     const itemsSider: MenuItem[] = [
-        { key: 'todo', icon: <ContainerOutlined />, label: 'Todo-List', onClick: () => navigate('/todo') },
-        { key: 'profile', icon: <UserOutlined />, label: 'Профиль', onClick: () => navigate('/profile') },
+        {key: 'todo', icon: <ContainerOutlined/>, label: 'Todo-List', onClick: () => navigate('/todo')},
+        {key: 'profile', icon: <UserOutlined/>, label: 'Профиль', onClick: () => navigate('/profile')},
     ];
 
     return (
-        <Layout hasSider style={{ height: '100vh' }}>
-            {location.pathname !== '/login' && (
+        <Layout hasSider style={{height: '100vh'}}>
+            {(location.pathname !== '/login' && location.pathname !== '/register') && (
                 <Sider theme="light">
                     <Menu
                         items={itemsSider}
@@ -32,7 +32,7 @@ const App = () => {
                         }}></Menu>
                 </Sider>
             )}
-            <AppRoutes />
+            <AppRoutes/>
         </Layout>
     );
 };

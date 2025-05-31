@@ -10,11 +10,11 @@ const routesConfig: RouteObject[] = [
     { path: '/todo', element: <TodoList /> },
     { path: '/profile', element: <Profile /> },
     { path: '/login', element: <LoginPage /> },
+    { path: '/register', element: <LoginPage /> },
 ]
 
 const AppRoutes = () => {
-    const routes = useRoutes(routesConfig)
-    return routes
+    return useRoutes(routesConfig)
 }
 
 export default AppRoutes

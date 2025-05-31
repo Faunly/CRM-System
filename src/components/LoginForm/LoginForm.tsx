@@ -74,6 +74,8 @@ const LoginForm = () => {
                                         fontWeight: '800'
                                     }}>Login</Button>
                         </Form.Item>
+                        <Typography.Text>Not Registered Yet? <Typography.Link href="/register">Create an
+                            account</Typography.Link></Typography.Text>
                     </Form>
                 </Flex>
             </Flex>

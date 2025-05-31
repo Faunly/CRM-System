@@ -67,8 +67,11 @@ const RegisterForm = () => {
                                         backgroundColor: "#7F265B",
                                         padding: "1.5rem 0",
                                         fontWeight: '800'
-                                    }}>Login</Button>
+                                    }}>Register</Button>
                         </Form.Item>
+
+                        <Typography.Text>Already registered? <Typography.Link href="/login">Login an
+                            account</Typography.Link></Typography.Text>
                     </Form>
                 </Flex>
             </Flex>
