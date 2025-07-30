@@ -36,7 +36,7 @@ const LoginForm = () => {
                     </Flex>
                     <Form
                         form={form}
-                        name="form-login"
+                        name="login"
                         layout="vertical"
 
                         initialValues={{remember: true}}
@@ -48,7 +48,7 @@ const LoginForm = () => {
                             name="email"
                             label="Email"
                             style={{color: "#525252", margin: "0 0 1.5rem 0"}}
-                            rules={[{required: true, message: 'Please, enter your username!'}]}>
+                            rules={[{required: true, message: 'Please, enter your email!'}]}>
                             <Input/>
                         </Form.Item>
 

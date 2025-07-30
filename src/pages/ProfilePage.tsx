@@ -1,6 +1,6 @@
-import { Typography } from 'antd'
+import {Typography} from 'antd'
 
-const { Text } = Typography
+const {Text} = Typography
 
 const Profile = () => {
     return <Text>Привет!!!</Text>
