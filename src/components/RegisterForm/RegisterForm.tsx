@@ -72,6 +72,10 @@ const RegisterForm = () => {
                                 {
                                     max: 60,
                                     message: "max: 60"
+                                },
+                                {
+                                    type: 'string',
+                                    message: "The input is not valid username!"
                                 }
                             ]}
                         >
