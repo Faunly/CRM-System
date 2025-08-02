@@ -1,0 +1,32 @@
+.container {
+  height: 100vh;
+  background-color: #ffffff;
+}
+
+.title {
+  font-weight: 700;
+  font-family: 'Nunito Sans', sans-serif;
+  margin: 0 0 0 1.5rem;
+}
+
+.text {
+  color: #525252;
+  margin-left: 1.5rem;
+}
+
+.input {
+  color: #525252;
+  margin: 0 0 0.5rem 0;
+}
+
+.formInput {
+  margin-bottom: 0;
+}
+
+.button {
+  width: 100%;
+  color: #ffffff;
+  background-color: #7f265b;
+  padding: 1.5rem 0;
+  font-weight: 800;
+}
