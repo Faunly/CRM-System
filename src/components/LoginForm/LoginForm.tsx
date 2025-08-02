@@ -1,7 +1,7 @@
 import {Button, Checkbox, Flex, Form, GetProps, Input, Layout, Typography} from 'antd';
 // import type { FormProps } from 'antd';
 import Icon from '@ant-design/icons';
-import SvgloginIcon from '../../assets/LoginPage/SvgLoginIcon';
+import SvgloginIcon from '../../assets/AuthPage/SvgLoginIcon';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
