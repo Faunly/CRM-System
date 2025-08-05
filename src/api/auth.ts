@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { AuthTypes } from '../types/auth';
+import { RegisterTypes, LoginTypes } from '../types/auth';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1',
@@ -9,7 +9,7 @@ const instanceAxios = axios.create({
   },
 });
 
-export const registerUser = async (data: AuthTypes) => {
+export const registerUser = async (data: RegisterTypes) => {
   try {
     const response = await instanceAxios.post('/auth/signup', {
       email: data.email,
@@ -18,6 +18,23 @@ export const registerUser = async (data: AuthTypes) => {
       phoneNumber: data.phone,
       username: data.username,
     });
+    return response;
+  } catch (error: any) {
+    if (error.response) {
+      console.log(error.response.data);
+      throw error;
+    }
+    throw new Error('Неизвестная ошибка');
+  }
+};
+
+export const LoginUser = async (data: LoginTypes) => {
+  try {
+    const response = await instanceAxios.post('/auth/signin', {
+      login: data.login,
+      password: data.password,
+    });
+    console.log('Tokens:', response?.data);
     return response;
   } catch (error: any) {
     if (error.response) {

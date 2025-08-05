@@ -10,11 +10,11 @@ import React from 'react';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
-const LoginIcon = (props: Partial<CustomIconComponentProps>) => (
+const AuthIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SvgloginIcon} {...props} />
 );
 
-type registerFormProps = {
+type RegisterFormProps = {
   successMessage: () => void;
   errorMessage: (error: string) => void;
 };
@@ -28,7 +28,7 @@ type FieldType = {
   phone?: string;
 };
 
-const RegisterForm: React.FC<registerFormProps> = ({
+const RegisterForm: React.FC<RegisterFormProps> = ({
   successMessage,
   errorMessage,
 }) => {
@@ -37,15 +37,15 @@ const RegisterForm: React.FC<registerFormProps> = ({
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     try {
       await registerUser(values);
-      // form.resetFields([
-      //   'register',
-      //   'username',
-      //   'login',
-      //   'password',
-      //   'confirm',
-      //   'email',
-      //   'phone',
-      // ]);
+      form.resetFields([
+        'register',
+        'username',
+        'login',
+        'password',
+        'confirm',
+        'email',
+        'phone',
+      ]);
       successMessage();
     } catch (error) {
       const axiosError = error as AxiosError<string>;
@@ -61,7 +61,7 @@ const RegisterForm: React.FC<registerFormProps> = ({
     <Layout style={{ fontFamily: "'Nunito Sans', sans-serif" }}>
       <Flex className={classes.container} justify="center" align="center">
         <Flex vertical gap="1rem">
-          <LoginIcon style={{ fontSize: '3.5rem' }} />
+          <AuthIcon style={{ fontSize: '3.5rem' }} />
           <Flex vertical>
             <Typography.Title level={3} className="title">
               Зарегистрируйтесь Ваш аккаунт
@@ -76,7 +76,6 @@ const RegisterForm: React.FC<registerFormProps> = ({
             layout="vertical"
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            // onFinishFailed={onFinishFailed} //TODO: добавить уведомление о провале
             autoComplete="off"
           >
             <Form.Item<FieldType>

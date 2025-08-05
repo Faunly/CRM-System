@@ -30,9 +30,15 @@ const AuthPage = () => {
       {contextHolder}
       <Image src={backgroundImage} preview={false} height={'100vh'} />
       {location.pathname === '/login' ? (
-        <LoginForm />
+        <LoginForm
+          successMessage={successMessage}
+          errorMessage={errorMessage}
+        />
       ) : (
-        <RegisterForm successMessage={successMessage} errorMessage={errorMessage} />
+        <RegisterForm
+          successMessage={successMessage}
+          errorMessage={errorMessage}
+        />
       )}
     </Flex>
   );
