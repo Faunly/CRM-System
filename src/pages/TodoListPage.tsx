@@ -40,7 +40,7 @@ const TodoList = () => {
       content: 'Получение задач...',
       duration: 1,
     });
-  }, []);
+  });
 
   useEffect(() => {
     fetchTasksByFilter();

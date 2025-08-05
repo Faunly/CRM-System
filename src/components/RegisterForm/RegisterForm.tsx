@@ -4,6 +4,9 @@ import Icon from '@ant-design/icons';
 import SvgloginIcon from '../../assets/AuthPage/SvgLoginIcon';
 
 import classes from './RegisterForm.module.css';
+import { registerUser } from '../../api/auth';
+import { AxiosError } from 'axios';
+import React from 'react';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -11,26 +14,49 @@ const LoginIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SvgloginIcon} {...props} />
 );
 
+type registerFormProps = {
+  successMessage: () => void;
+  errorMessage: (error: string) => void;
+};
+
 type FieldType = {
-  username?: string;
-  login?: string;
-  password?: string;
-  confirm?: string;
-  email?: string;
+  username: string;
+  login: string;
+  password: string;
+  confirm: string;
+  email: string;
   phone?: string;
 };
 
-const RegisterForm = () => {
+const RegisterForm: React.FC<registerFormProps> = ({
+  successMessage,
+  errorMessage,
+}) => {
   const [form] = Form.useForm();
 
-  // const registerUserHandler = async () => {
+  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+    try {
+      await registerUser(values);
+      // form.resetFields([
+      //   'register',
+      //   'username',
+      //   'login',
+      //   'password',
+      //   'confirm',
+      //   'email',
+      //   'phone',
+      // ]);
+      successMessage();
+    } catch (error) {
+      const axiosError = error as AxiosError<string>;
 
-  // }
-
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('auth ', values);
+      if (axiosError.response?.data) {
+        errorMessage(axiosError.response.data);
+      } else {
+        errorMessage('Произошла неизвестная ошибка');
+      }
+    }
   };
-
   return (
     <Layout style={{ fontFamily: "'Nunito Sans', sans-serif" }}>
       <Flex className={classes.container} justify="center" align="center">
