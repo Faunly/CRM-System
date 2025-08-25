@@ -15,6 +15,8 @@ import classes from './LoginForm.module.css';
 import { AxiosError } from 'axios';
 import { LoginUser } from '../../api/auth';
 import { useNavigate } from 'react-router';
+import { useSelector, useDispatch } from 'react-redux';
+import { uiActions } from '../../store/ui-slice';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -39,9 +41,17 @@ const LoginForm: React.FC<LoginFormProps> = ({
 }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const isFetching = useSelector((state) => state.ui.isFetching); // FIXME
+
+  const setIsFetchingHandler = (state: boolean) => {
+    dispatch(uiActions.setIsFetching(state));
+  };
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     try {
+      setIsFetchingHandler(true);
       await LoginUser(values);
       form.resetFields(['login', 'password', 'remember']);
       successMessage();
@@ -54,6 +64,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
       } else {
         errorMessage('Произошла неизвестная ошибка');
       }
+    } finally {
+      setIsFetchingHandler(false);
     }
   };
   return (
@@ -101,6 +113,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
                   required: true,
                   message: 'Пожалуйста, введите пароль!',
                 },
+                {
+                  min: 6,
+                  message: 'Минимальное кол-во символов: 6',
+                },
               ]}
             >
               <Input.Password className={classes.input} />
@@ -115,7 +131,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
             </Form.Item>
 
             <Form.Item<FieldType> label={null}>
-              <Button htmlType="submit" className={classes.button}>
+              <Button
+                htmlType="submit"
+                className={classes.button}
+                disabled={isFetching}
+              >
                 Войти
               </Button>
             </Form.Item>

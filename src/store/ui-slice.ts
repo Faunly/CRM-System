@@ -6,8 +6,11 @@ const uiSlice = createSlice({
   name: "ui",
   initialState: initialState,
   reducers: {
-    toggleIsFetching(state) {
-      state.isFetching = !state.isFetching
+    setIsFetching(state, action) {
+      state.isFetching = action.payload
     }
   }
 })
+
+export default uiSlice.reducer
+export const uiActions = uiSlice.actions

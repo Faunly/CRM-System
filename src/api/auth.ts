@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { RegisterTypes, LoginTypes } from '../types/auth';
 
 const instanceAxios = axios.create({
-  baseURL: 'https://easydev.club/api/v1',
+  baseURL: 'https://easydev.club/api/v1/auth',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -11,7 +12,7 @@ const instanceAxios = axios.create({
 
 export const registerUser = async (data: RegisterTypes) => {
   try {
-    const response = await instanceAxios.post('/auth/signup', {
+    const response = await instanceAxios.post('signup', {
       email: data.email,
       login: data.login,
       password: data.password,
@@ -19,7 +20,7 @@ export const registerUser = async (data: RegisterTypes) => {
       username: data.username,
     });
     return response;
-  } catch (error: any) {
+  } catch (error: any) { //FIXME
     if (error.response) {
       console.log(error.response.data);
       throw error;
@@ -30,13 +31,19 @@ export const registerUser = async (data: RegisterTypes) => {
 
 export const LoginUser = async (data: LoginTypes) => {
   try {
-    const response = await instanceAxios.post('/auth/signin', {
+    const response = await instanceAxios.post('signin', {
       login: data.login,
       password: data.password,
     });
-    console.log('Tokens:', response?.data);
+    const accessToken = response?.data.accessToken;
+    const refreshToken = response?.data.refreshToken;
+    console.log("token", accessToken)
+
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+
     return response;
-  } catch (error: any) {
+  } catch (error: any) { // FIXME
     if (error.response) {
       console.log(error.response.data);
       throw error;

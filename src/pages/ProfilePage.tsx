@@ -1,9 +1,21 @@
-import {Typography} from 'antd'
+import { Button, Flex, Typography } from 'antd';
+import { getProfileData } from '../api/user';
 
-const {Text} = Typography
+const { Text } = Typography;
 
 const Profile = () => {
-    return <Text>Привет!!!</Text>
-}
+  const getProfileDataHandler = () => {
+    getProfileData();
+  };
 
-export default Profile
+  return (
+    <>
+      <Flex vertical>
+        <Text>Привет!!!</Text>
+        <Button onClick={getProfileDataHandler}>Get profile data</Button>
+      </Flex>
+    </>
+  );
+};
+
+export default Profile;
