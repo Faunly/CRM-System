@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { RegisterTypes, LoginTypes } from '../types/auth';
+import { setAuthToken } from '../util/auth';
+import { setRefreshToken } from '../util/refresh';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/auth',
@@ -37,10 +39,9 @@ export const LoginUser = async (data: LoginTypes) => {
     });
     const accessToken = response?.data.accessToken;
     const refreshToken = response?.data.refreshToken;
-    console.log("token", accessToken)
 
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
+    setAuthToken(accessToken)
+    setRefreshToken(refreshToken)
 
     return response;
   } catch (error: any) { // FIXME

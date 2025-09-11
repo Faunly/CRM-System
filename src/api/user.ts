@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getAuthToken } from '../util/auth';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/user/',
@@ -10,13 +11,13 @@ const instanceAxios = axios.create({
 
 export const getProfileData = async () => {
   try {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = getAuthToken()
     const responce = await instanceAxios.get('profile', {
       headers: {
         Authorization: accessToken,
       },
     });
-    console.log(responce?.data);
+    return responce?.data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // FIXME
