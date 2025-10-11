@@ -17,6 +17,7 @@ import { LoginUser } from '../../api/auth';
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { uiActions } from '../../store/ui-slice';
+import { authActions } from '../../store/auth-slice';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -55,6 +56,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
       await LoginUser(values);
       form.resetFields(['login', 'password', 'remember']);
       successMessage();
+      dispatch(authActions.authLogin());
+      console.log('login success');
       navigate('/todo');
     } catch (error) {
       const axiosError = error as AxiosError<string>;

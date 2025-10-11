@@ -1,20 +1,37 @@
-import { RouteObject, useRoutes } from 'react-router-dom'
-import { Navigate } from 'react-router'
+import { createBrowserRouter } from 'react-router';
 
-import Profile from '../pages/ProfilePage'
-import TodoList from '../pages/TodoListPage'
-import AuthPage from '../pages/AuthPage'
+import Profile from '../pages/ProfilePage';
+import TodoList from '../pages/TodoListPage';
+import AuthPage from '../pages/AuthPage';
+import App from '../App';
 
-const routesConfig: RouteObject[] = [
-    { path: '/', element: <Navigate to="/login" replace /> },
-    { path: '/todo', element: <TodoList /> },
-    { path: '/profile', element: <Profile /> },
-    { path: '/login', element: <AuthPage /> },
-    { path: '/register', element: <AuthPage /> },
-]
+import { checkAuthLoader, tokenLoader } from '../util/auth';
 
-const AppRoutes = () => {
-    return useRoutes(routesConfig)
-}
-
-export default AppRoutes
+export const router = createBrowserRouter([
+  {
+    path: 'login',
+    element: <AuthPage />,
+  },
+  {
+    path: '/',
+    element: <App />,
+    loader: tokenLoader,
+    children: [
+      {
+        index: true,
+        element: <TodoList />,
+        loader: checkAuthLoader,
+      },
+      {
+        path: 'profile',
+        element: <Profile />,
+        loader: checkAuthLoader,
+      },
+      {
+        path: 'todo',
+        element: <TodoList />,
+        loader: checkAuthLoader,
+      },
+    ],
+  },
+]);

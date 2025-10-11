@@ -11,14 +11,14 @@ const instanceAxios = axios.create({
 
 export const getProfileData = async () => {
   try {
-    const accessToken = getAuthToken()
+    const accessToken = getAuthToken();
     const responce = await instanceAxios.get('profile', {
       headers: {
         Authorization: accessToken,
       },
     });
-    return responce?.data
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return responce?.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // FIXME
     if (error.response) {

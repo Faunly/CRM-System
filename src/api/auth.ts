@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// FIXME
 import axios from 'axios';
 import { RegisterTypes, LoginTypes } from '../types/auth';
-import { setAuthToken } from '../util/auth';
-import { setRefreshToken } from '../util/refresh';
+import { cleanTokens, getAuthToken, setAuthToken } from '../util/auth';
+import { setRefreshToken } from '../util/auth';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/auth',
@@ -22,7 +23,7 @@ export const registerUser = async (data: RegisterTypes) => {
       username: data.username,
     });
     return response;
-  } catch (error: any) { //FIXME
+  } catch (error: any) {
     if (error.response) {
       console.log(error.response.data);
       throw error;
@@ -40,15 +41,36 @@ export const LoginUser = async (data: LoginTypes) => {
     const accessToken = response?.data.accessToken;
     const refreshToken = response?.data.refreshToken;
 
-    setAuthToken(accessToken)
-    setRefreshToken(refreshToken)
+    setAuthToken(accessToken);
+    setRefreshToken(refreshToken);
 
     return response;
-  } catch (error: any) { // FIXME
+  } catch (error: any) {
     if (error.response) {
       console.log(error.response.data);
       throw error;
     }
     throw new Error('Неизвестная ошибка');
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    const accessToken = getAuthToken();
+    const responce = await instanceAxios.post('logout', {
+      headers: {
+        Authorization: accessToken,
+      },
+    });
+
+    return responce?.data;
+  } catch (error: any) {
+    if (error.response) {
+      console.log(error.response.data);
+      throw new Error('Ошибка получение данных');
+    }
+    throw new Error('Неизвестная ошибка');
+  } finally {
+    cleanTokens();
   }
 };
