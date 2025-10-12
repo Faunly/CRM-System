@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getAuthToken } from '../util/auth';
+import { cleanTokens, getToken } from '../util/tokens';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/user/',
@@ -11,13 +11,13 @@ const instanceAxios = axios.create({
 
 export const getProfileData = async () => {
   try {
-    const accessToken = getAuthToken();
-    const responce = await instanceAxios.get('profile', {
+    const accessToken = getToken('accessToken');
+    const response = await instanceAxios.get('profile', {
       headers: {
         Authorization: accessToken,
       },
     });
-    return responce?.data;
+    return response?.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // FIXME
@@ -26,5 +26,34 @@ export const getProfileData = async () => {
       throw new Error('Ошибка получение данных');
     }
     throw new Error('Неизвестная ошибка');
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    const accessToken = getToken('accessToken');
+    console.log('test');
+    const response = await instanceAxios.post(
+      'logout',
+      {},
+      {
+        headers: {
+          Authorization: accessToken,
+        },
+      },
+    );
+
+    console.log('logout', accessToken);
+
+    return response?.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.response) {
+      console.log(error.response.data);
+      throw new Error('Ошибка отправления данных');
+    }
+    throw new Error('Неизвестная ошибка');
+  } finally {
+    cleanTokens();
   }
 };

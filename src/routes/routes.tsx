@@ -5,7 +5,8 @@ import TodoList from '../pages/TodoListPage';
 import AuthPage from '../pages/AuthPage';
 import App from '../App';
 
-import { checkAuthLoader, tokenLoader } from '../util/auth';
+import { checkAuthLoader } from '../util/auth';
+import { tokenLoader } from '../util/tokens';
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +21,6 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <TodoList />,
-        loader: checkAuthLoader,
       },
       {
         path: 'profile',
@@ -30,7 +30,6 @@ export const router = createBrowserRouter([
       {
         path: 'todo',
         element: <TodoList />,
-        loader: checkAuthLoader,
       },
     ],
   },

@@ -3,10 +3,6 @@ import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router';
 import type { MenuProps } from 'antd';
 import { Layout, Menu } from 'antd';
 import { ContainerOutlined, UserOutlined } from '@ant-design/icons';
-import { logoutUser } from './api/auth';
-
-// import { useSelector } from 'react-redux';
-// import { authActions } from './store/auth-slice';
 
 type MenuItem = Required<MenuProps>['items'][number];
 const { Sider } = Layout;
@@ -24,12 +20,6 @@ const App = () => {
       return;
     }
 
-    setTimeout(
-      () => {
-        logoutUser();
-      },
-      3 * 60 * 1000,
-    );
   }, [token]);
 
   const itemsSider: MenuItem[] = [
