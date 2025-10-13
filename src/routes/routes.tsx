@@ -14,6 +14,10 @@ export const router = createBrowserRouter([
     element: <AuthPage />,
   },
   {
+    path: 'register',
+    element: <AuthPage />,
+  },
+  {
     path: '/',
     element: <App />,
     loader: tokenLoader,
