@@ -1,18 +1,19 @@
 import { redirect } from 'react-router';
-import { getToken } from './tokens';
-import { updateAccessToken } from '../api/auth';
+import { cleanTokens, getToken } from './tokens';
 
 export const checkAuthLoader = () => {
-  const token = getToken("accessToken");
+  const token = getToken('accessToken');
 
   if (!token) {
     console.log('token undefined! Return to login page');
     return redirect('/login');
   }
-
-  if (token === 'EXPIRED') {
-      updateAccessToken();
-  } 
-
+  
   console.log('token exists!');
+};
+
+export const forceLogout = () => {
+  cleanTokens();
+  // return redirect('/login')
+  window.location.href = '/login'; // по другому не работает 
 };

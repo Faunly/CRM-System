@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// FIXME
 import axios from 'axios';
 import { RegisterTypes, LoginTypes } from '../types/auth';
-import { getToken, setToken, setExpirationToken } from '../util/tokens';
+import { getToken, setToken } from '../util/tokens';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/auth',
@@ -22,9 +20,9 @@ export const registerUser = async (data: RegisterTypes) => {
       username: data.username,
     });
     return response;
-  } catch (error: any) {
-    if (error.response) {
-      console.log(error.response.data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.data);
       throw error;
     }
     throw new Error('Неизвестная ошибка');
@@ -43,13 +41,10 @@ export const LoginUser = async (data: LoginTypes) => {
     setToken('accessToken', accessToken);
     setToken('refreshToken', refreshToken);
 
-    setExpirationToken('accessTokenExpiration', 1);
-    setExpirationToken('refreshTokenExpiration', 1);
-
     return response;
-  } catch (error: any) {
-    if (error.response) {
-      console.log(error.response.data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.data);
       throw error;
     }
     throw new Error('Неизвестная ошибка');
@@ -60,12 +55,15 @@ export const updateAccessToken = async () => {
   try {
     let accessToken = getToken('accessToken');
     let refreshToken = getToken('refreshToken');
-    const response = await instanceAxios.post('refresh', {
-      headers: {
-        Authorization: accessToken,
+    const response = await instanceAxios.post(
+      'refresh',
+      { refreshToken },
+      {
+        headers: {
+          Authorization: accessToken,
+        },
       },
-      refreshToken,
-    });
+    );
 
     accessToken = response.data.accessToken;
     refreshToken = response.data.refreshToken;
@@ -77,17 +75,13 @@ export const updateAccessToken = async () => {
     setToken('accessToken', accessToken);
     setToken('refreshToken', refreshToken);
 
-    setExpirationToken('accessTokenExpiration', 3);
-    setExpirationToken('refreshTokenExpiration', 12 * 60);
-
     console.log('Access Token update successfully!');
 
-    console.log(response.status);
     return response?.data;
-  } catch (error: any) {
-    if (error.response) {
-      console.log(error.response.data);
-      throw new Error('Ошибка получение данных');
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.data);
+      throw Error('Ошибка получение данных');
     }
     throw new Error('Неизвестная ошибка');
   }

@@ -17,7 +17,7 @@ import { LoginUser } from '../../api/auth';
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { uiActions } from '../../store/ui-slice';
-import { authActions } from '../../store/auth-slice';
+import { RootState } from '../../store' 
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -44,7 +44,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const isFetching = useSelector((state) => state.ui.isFetching); // FIXME
+  const isFetching = useSelector((state: RootState) => state.ui.isFetching); // FIXME
 
   const setIsFetchingHandler = (state: boolean) => {
     dispatch(uiActions.setIsFetching(state));
@@ -56,7 +56,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
       await LoginUser(values);
       form.resetFields(['login', 'password', 'remember']);
       successMessage();
-      dispatch(authActions.authLogin());
       console.log('login success');
       navigate('/todo');
     } catch (error) {

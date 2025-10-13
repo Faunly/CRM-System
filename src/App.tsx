@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router';
+import { useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 import type { MenuProps } from 'antd';
 import { Layout, Menu } from 'antd';
 import { ContainerOutlined, UserOutlined } from '@ant-design/icons';
@@ -12,15 +12,6 @@ const App = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const token = useLoaderData();
-
-  useEffect(() => {
-    if (!token) {
-      return;
-    }
-
-  }, [token]);
 
   const itemsSider: MenuItem[] = [
     {
