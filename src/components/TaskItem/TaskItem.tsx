@@ -87,9 +87,10 @@ const TaskItem: FC<TaskItemProps> = ({
   };
 
   const onFinish = (value: FieldType) => {
-    handleChangeDataTask(id, value.editTitleTask, isDone);
-    setIsEdited((prevState) => !prevState);
-  };
+    handleChangeDataTask(id, value.editTitleTask, isDone)
+    setCurTitleTask(value.editTitleTask)
+    setIsEdited(prevState => !prevState)
+  }
 
   return (
     <Form form={form} onFinish={onFinish}>
