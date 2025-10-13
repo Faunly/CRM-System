@@ -48,9 +48,9 @@ const Profile = () => {
         <Title>Профиль пользователя {profileData?.username}</Title>
         <Text>Почта: {profileData?.email}</Text>
         <Text>Телефон: {profileData?.phoneNumber || 'Нет'}</Text>
+        <Button onClick={logoutHandler}>Выйти</Button>
+        <Button onClick={updateTokenHandler}>обновить токен</Button>
       </Flex>
-      <Button onClick={logoutHandler}>Выйти</Button>
-      <Button onClick={updateTokenHandler}>обновить токен</Button>
     </>
   );
 };
