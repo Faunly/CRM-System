@@ -2,7 +2,6 @@ import { Button, Flex, Typography } from 'antd';
 import { getProfileData, logoutUser } from '../api/user';
 import { useEffect, useState } from 'react';
 import { ProfileDataType } from '../types/profile';
-import { updateAccessToken } from '../api/auth';
 
 import { useNavigate } from 'react-router';
 
@@ -30,14 +29,6 @@ const Profile = () => {
     }
   };
 
-  const updateTokenHandler = () => {
-    try {
-      updateAccessToken();
-    } catch {
-      throw new Error('Ошибка обновления токена!');
-    }
-  };
-
   useEffect(() => {
     getProfileDataHandler();
   }, []);
@@ -49,7 +40,6 @@ const Profile = () => {
         <Text>Почта: {profileData?.email}</Text>
         <Text>Телефон: {profileData?.phoneNumber || 'Нет'}</Text>
         <Button onClick={logoutHandler}>Выйти</Button>
-        <Button onClick={updateTokenHandler}>обновить токен</Button>
       </Flex>
     </>
   );

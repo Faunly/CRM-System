@@ -7,6 +7,7 @@ import classes from './RegisterForm.module.css';
 import { registerUser } from '../../api/auth';
 import { AxiosError } from 'axios';
 import React from 'react';
+import { useNavigate } from 'react-router';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -34,6 +35,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 }) => {
   const [form] = Form.useForm();
 
+  const navigate = useNavigate();
+
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     try {
       await registerUser(values);
@@ -47,13 +50,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         'phone',
       ]);
       successMessage();
+      navigate('/login');
     } catch (error) {
       const axiosError = error as AxiosError<string>;
 
       if (axiosError.response?.data) {
         errorMessage(axiosError.response.data);
       } else {
-        errorMessage('Произошла неизвестная ошибка');
+        errorMessage('Unknown error!');
       }
     }
   };

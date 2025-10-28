@@ -17,12 +17,11 @@ import { LoginUser } from '../../api/auth';
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { uiActions } from '../../store/ui-slice';
-import { RootState } from '../../store' 
+import { RootState } from '../../store';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
 type LoginFormProps = {
-  successMessage: () => void;
   errorMessage: (error: string) => void;
 };
 
@@ -37,7 +36,7 @@ type FieldType = {
 };
 
 const LoginForm: React.FC<LoginFormProps> = ({
-  successMessage,
+  // successMessage,
   errorMessage,
 }) => {
   const [form] = Form.useForm();
@@ -55,7 +54,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       setIsFetchingHandler(true);
       await LoginUser(values);
       form.resetFields(['login', 'password', 'remember']);
-      successMessage();
+      // successMessage();
       console.log('login success');
       navigate('/todo');
     } catch (error) {

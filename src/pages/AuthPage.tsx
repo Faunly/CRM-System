@@ -12,7 +12,7 @@ const AuthPage = () => {
   const successMessage = () => {
     messageApi.open({
       type: 'success',
-      content: 'Успех!',
+      content: 'Вы успешно зарегестрировались!',
       duration: 5,
     });
   };
@@ -31,7 +31,7 @@ const AuthPage = () => {
       <Image src={backgroundImage} preview={false} height={'100vh'} />
       {location.pathname === '/login' ? (
         <LoginForm
-          successMessage={successMessage}
+          // successMessage={successMessage}
           errorMessage={errorMessage}
         />
       ) : (
