@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { RegisterTypes, LoginTypes } from '../types/auth';
-import { getToken, setToken } from '../util/tokens';
+import { getRefreshToken, setRefreshToken } from '../util/tokens';
+import { getAccessToken, setAccessToken } from '../util/TokenManager';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/auth',
@@ -38,8 +39,16 @@ export const LoginUser = async (data: LoginTypes) => {
     const accessToken = response?.data.accessToken;
     const refreshToken = response?.data.refreshToken;
 
-    setToken('accessToken', accessToken);
-    setToken('refreshToken', refreshToken);
+    console.log('get tokens');
+
+    setRefreshToken(refreshToken);
+    console.log('set refresh');
+
+    console.log('test get access: ', );
+    setAccessToken(accessToken);
+    console.log('set access');
+
+    console.log('login success');
 
     return response;
   } catch (error) {
@@ -53,8 +62,8 @@ export const LoginUser = async (data: LoginTypes) => {
 
 export const updateAccessToken = async () => {
   try {
-    let accessToken = getToken('accessToken');
-    let refreshToken = getToken('refreshToken');
+    let accessToken = getAccessToken();
+    let refreshToken = getRefreshToken();
     const response = await instanceAxios.post(
       'refresh',
       { refreshToken },
@@ -72,8 +81,8 @@ export const updateAccessToken = async () => {
       return 'Tokens undefined';
     }
 
-    setToken('accessToken', accessToken);
-    setToken('refreshToken', refreshToken);
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
 
     console.log('Access Token update successfully!');
 

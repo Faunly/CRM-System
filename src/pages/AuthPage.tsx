@@ -12,8 +12,8 @@ const AuthPage = () => {
   const successMessage = () => {
     messageApi.open({
       type: 'success',
-      content: 'Вы успешно зарегестрировались!',
-      duration: 5,
+      content: 'Вы успешно зарегистрировались!',
+      duration: 30,
     });
   };
 

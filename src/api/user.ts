@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { cleanTokens, getToken } from '../util/tokens';
+import { cleanTokens } from '../util/tokens';
 import { updateAccessToken } from './auth';
 import { forceLogout } from '../util/auth';
+import { getAccessToken } from '../util/TokenManager';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/user/',
@@ -17,7 +18,7 @@ instanceAxios.interceptors.response.use(
     if (error.response?.status === 401) {
       try {
         await updateAccessToken();
-        const accessToken = getToken('accessToken');
+        const accessToken = getAccessToken();
         error.config.headers.Authorization = accessToken;
 
         return instanceAxios(error.config);
@@ -33,7 +34,7 @@ instanceAxios.interceptors.response.use(
 
 export const getProfileData = async () => {
   try {
-    const accessToken = getToken('accessToken');
+    const accessToken = getAccessToken();
     const response = await instanceAxios.get('profile', {
       headers: {
         Authorization: accessToken,
@@ -51,7 +52,7 @@ export const getProfileData = async () => {
 
 export const logoutUser = async () => {
   try {
-    const accessToken = getToken('accessToken');
+    const accessToken = getAccessToken();
 
     const response = await instanceAxios.post(
       'logout',

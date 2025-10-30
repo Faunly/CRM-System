@@ -6,7 +6,7 @@ import AuthPage from '../pages/AuthPage';
 import App from '../App';
 
 import { checkAuthLoader } from '../util/auth';
-import { tokenLoader } from '../util/tokens';
+import { accessTokenLoader } from '../util/tokens';
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    loader: tokenLoader,
+    loader: accessTokenLoader,
     children: [
       {
         index: true,

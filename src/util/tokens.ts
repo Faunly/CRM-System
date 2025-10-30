@@ -1,5 +1,11 @@
-export const getToken = (key: string) => {
-  const token = localStorage.getItem(key);
+import { clearAccessToken, getAccessToken } from './TokenManager';
+
+export const accessTokenLoader = () => {
+  return getAccessToken();
+};
+
+export const getRefreshToken = () => {
+  const token = localStorage.getItem('refreshToken');
 
   if (!token) {
     return null;
@@ -8,21 +14,11 @@ export const getToken = (key: string) => {
   return token;
 };
 
-export const setToken = (key: string, token: string) => {
-  localStorage.setItem(key, token);
+export const setRefreshToken = (token: string) => {
+  localStorage.setItem('refreshToken', token);
 };
 
 export const cleanTokens = () => {
-  localStorage.removeItem('accessToken');
+  clearAccessToken();
   localStorage.removeItem('refreshToken');
-  localStorage.removeItem('accessTokenExpiration');
-  localStorage.removeItem('refreshTokenExpiration');
-};
-
-export const tokenLoader = () => {
-  return getToken('accessToken');
-};
-
-export const updateToken = (key: string, token: string) => {
-  localStorage.setItem(key, token);
 };
