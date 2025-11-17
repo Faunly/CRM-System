@@ -1,4 +1,4 @@
-import { Flex, Image, message } from 'antd';
+import { Flex, Image, message, Modal } from 'antd';
 
 import backgroundImage from '../assets/AuthPage/background.png';
 import RegisterForm from '../components/RegisterForm/RegisterForm';
@@ -8,14 +8,6 @@ import { useLocation } from 'react-router';
 const AuthPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const location = useLocation();
-
-  const successMessage = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'Вы успешно зарегистрировались!',
-      duration: 30,
-    });
-  };
 
   const errorMessage = (error: string) => {
     messageApi.open({
@@ -31,12 +23,10 @@ const AuthPage = () => {
       <Image src={backgroundImage} preview={false} height={'100vh'} />
       {location.pathname === '/login' ? (
         <LoginForm
-          // successMessage={successMessage}
           errorMessage={errorMessage}
         />
       ) : (
         <RegisterForm
-          successMessage={successMessage}
           errorMessage={errorMessage}
         />
       )}

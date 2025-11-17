@@ -1,4 +1,13 @@
-import { Button, Flex, Form, GetProps, Input, Layout, Typography } from 'antd';
+import {
+  Button,
+  Flex,
+  Form,
+  GetProps,
+  Input,
+  Layout,
+  Modal,
+  Typography,
+} from 'antd';
 import type { FormProps } from 'antd';
 import Icon from '@ant-design/icons';
 import SvgloginIcon from '../../assets/AuthPage/SvgLoginIcon';
@@ -6,8 +15,10 @@ import SvgloginIcon from '../../assets/AuthPage/SvgLoginIcon';
 import classes from './RegisterForm.module.css';
 import { registerUser } from '../../api/auth';
 import { AxiosError } from 'axios';
-import React from 'react';
-import { useNavigate } from 'react-router';
+import React, { useState } from 'react';
+import { RootState } from '../../store';
+import { useSelector, useDispatch } from 'react-redux';
+import { uiActions } from '../../store/ui-slice';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -16,7 +27,6 @@ const AuthIcon = (props: Partial<CustomIconComponentProps>) => (
 );
 
 type RegisterFormProps = {
-  successMessage: () => void;
   errorMessage: (error: string) => void;
 };
 
@@ -29,16 +39,24 @@ type FieldType = {
   phone?: string;
 };
 
-const RegisterForm: React.FC<RegisterFormProps> = ({
-  successMessage,
-  errorMessage,
-}) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ errorMessage }) => {
   const [form] = Form.useForm();
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
 
-  const navigate = useNavigate();
+  const isFetching = useSelector((state: RootState) => state.ui.isFetching);
+
+  const setIsFetchingHandler = (state: boolean) => {
+    dispatch(uiActions.setIsFetching(state));
+  };
+
+  const showModal = () => {
+    setOpen(true);
+  };
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     try {
+      setIsFetchingHandler(true);
       await registerUser(values);
       form.resetFields([
         'register',
@@ -49,8 +67,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         'email',
         'phone',
       ]);
-      successMessage();
-      navigate('/login');
+      showModal();
     } catch (error) {
       const axiosError = error as AxiosError<string>;
 
@@ -59,6 +76,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       } else {
         errorMessage('Unknown error!');
       }
+    } finally {
+      setIsFetchingHandler(false);
     }
   };
   return (
@@ -207,7 +226,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
             </Form.Item>
 
             <Form.Item<FieldType> label={null}>
-              <Button htmlType="submit" className={classes.button}>
+              <Button
+                htmlType="submit"
+                className={classes.button}
+                disabled={isFetching}
+              >
                 Зарегистрироваться
               </Button>
             </Form.Item>
@@ -221,6 +244,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           </Form>
         </Flex>
       </Flex>
+      <Modal open={open} title="Вы успешно зарегистрировались!" footer={null}>
+        <a href="/login">Перейти на страницу авторизации для входа в систему</a>
+      </Modal>
     </Layout>
   );
 };

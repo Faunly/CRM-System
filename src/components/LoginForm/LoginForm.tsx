@@ -43,7 +43,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const isFetching = useSelector((state: RootState) => state.ui.isFetching); // FIXME
+  const isFetching = useSelector((state: RootState) => state.ui.isFetching);
 
   const setIsFetchingHandler = (state: boolean) => {
     dispatch(uiActions.setIsFetching(state));
