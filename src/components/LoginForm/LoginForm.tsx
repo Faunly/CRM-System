@@ -15,14 +15,15 @@ import classes from './LoginForm.module.css';
 import { AxiosError } from 'axios';
 import { LoginUser } from '../../api/auth';
 import { useNavigate } from 'react-router';
-import { useSelector, useDispatch } from 'react-redux';
-import { uiActions } from '../../store/ui-slice';
-import { RootState } from '../../store';
+import { useSelector } from 'react-redux';
+import { useUIActions } from '../../store/hooks/useUIActions';
+import { selectIsFetching } from '../../store/selectors/uiSelectors';
+import { NoticeType } from 'antd/es/message/interface';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
 type LoginFormProps = {
-  errorMessage: (error: string) => void;
+  showMessage: (type: NoticeType, content: string) => void;
 };
 
 const AuthIcon = (props: Partial<CustomIconComponentProps>) => (
@@ -35,38 +36,32 @@ type FieldType = {
   remember?: string;
 };
 
-const LoginForm: React.FC<LoginFormProps> = ({
-  // successMessage,
-  errorMessage,
-}) => {
+const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
   const [form] = Form.useForm();
+  const { setIsAuth, setIsFetching } = useUIActions();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const isFetching = useSelector((state: RootState) => state.ui.isFetching);
-
-  const setIsFetchingHandler = (state: boolean) => {
-    dispatch(uiActions.setIsFetching(state));
-  };
+  const isFetching = useSelector(selectIsFetching);
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     try {
-      setIsFetchingHandler(true);
+      setIsFetching(true);
       await LoginUser(values);
       form.resetFields(['login', 'password', 'remember']);
-      // successMessage();
       console.log('login success');
+      showMessage('success', 'Вы успешно авторизовались!');
+      setIsAuth(true);
       navigate('/todo');
     } catch (error) {
       const axiosError = error as AxiosError<string>;
 
       if (axiosError.response?.data) {
-        errorMessage(axiosError.response.data);
+        showMessage('error', `Произошла ошибка: ${axiosError.response.data}`);
       } else {
-        errorMessage('Произошла неизвестная ошибка');
+        showMessage('error', 'Произошла неизвестная ошибка');
       }
     } finally {
-      setIsFetchingHandler(false);
+      setIsFetching(false);
     }
   };
   return (

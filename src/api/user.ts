@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { cleanTokens } from '../util/tokens';
+import { cleanTokens } from '../util/auth';
 import { updateAccessToken } from './auth';
 import { forceLogout } from '../util/auth';
-import { getAccessToken } from '../util/TokenManager';
+import { getAccessToken } from '../util/accessTokenManager';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/user/',
@@ -12,14 +12,30 @@ const instanceAxios = axios.create({
   },
 });
 
+instanceAxios.interceptors.request.use((config) => {
+  const token = getAccessToken();
+
+  if (token) {
+    config.headers.Authorization = token;
+  }
+
+  return config;
+});
+
 instanceAxios.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    // фикс зацикливания
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
       try {
         await updateAccessToken();
         const accessToken = getAccessToken();
-        error.config.headers.Authorization = accessToken;
+
+        originalRequest.headers.Authorization = accessToken;
 
         return instanceAxios(error.config);
       } catch (refreshError) {
@@ -34,12 +50,7 @@ instanceAxios.interceptors.response.use(
 
 export const getProfileData = async () => {
   try {
-    const accessToken = getAccessToken();
-    const response = await instanceAxios.get('profile', {
-      headers: {
-        Authorization: accessToken,
-      },
-    });
+    const response = await instanceAxios.get('profile');
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -52,18 +63,7 @@ export const getProfileData = async () => {
 
 export const logoutUser = async () => {
   try {
-    const accessToken = getAccessToken();
-
-    const response = await instanceAxios.post(
-      'logout',
-      {},
-      {
-        headers: {
-          Authorization: accessToken,
-        },
-      },
-    );
-
+    const response = await instanceAxios.post('logout', {});
     console.log('logout');
 
     return response?.data;

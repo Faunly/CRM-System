@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { ProfileDataType } from '../types/profile';
 
 import { useNavigate } from 'react-router';
+import { useUIActions } from '../store/hooks/useUIActions';
 
 const { Text, Title } = Typography;
 
 const Profile = () => {
   const [profileData, setProfileData] = useState<ProfileDataType | null>(null);
+  const { setIsAuth } = useUIActions();
   const navigate = useNavigate();
 
   const getProfileDataHandler = async () => {
@@ -23,6 +25,7 @@ const Profile = () => {
   const logoutHandler = () => {
     try {
       logoutUser();
+      setIsAuth(false);
       navigate('/login');
     } catch {
       throw new Error('Ошибка завершения сессии!');

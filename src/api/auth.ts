@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { RegisterTypes, LoginTypes } from '../types/auth';
-import { getRefreshToken, setRefreshToken } from '../util/tokens';
-import { getAccessToken, setAccessToken } from '../util/TokenManager';
+import { getRefreshToken, setRefreshToken } from '../util/refreshTokenManager';
+import { getAccessToken, setAccessToken } from '../util/accessTokenManager';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/auth',
@@ -39,16 +39,8 @@ export const LoginUser = async (data: LoginTypes) => {
     const accessToken = response?.data.accessToken;
     const refreshToken = response?.data.refreshToken;
 
-    console.log('get tokens');
-
     setRefreshToken(refreshToken);
-    console.log('set refresh');
-
-    console.log('test get access: ', );
     setAccessToken(accessToken);
-    console.log('set access');
-
-    console.log('login success');
 
     return response;
   } catch (error) {

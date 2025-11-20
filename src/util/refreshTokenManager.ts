@@ -1,4 +1,4 @@
-import { clearAccessToken, getAccessToken } from './TokenManager';
+import { getAccessToken } from './accessTokenManager';
 
 export const accessTokenLoader = () => {
   return getAccessToken();
@@ -16,9 +16,4 @@ export const getRefreshToken = () => {
 
 export const setRefreshToken = (token: string) => {
   localStorage.setItem('refreshToken', token);
-};
-
-export const cleanTokens = () => {
-  clearAccessToken();
-  localStorage.removeItem('refreshToken');
 };

@@ -18,7 +18,8 @@ import { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { RootState } from '../../store';
 import { useSelector, useDispatch } from 'react-redux';
-import { uiActions } from '../../store/ui-slice';
+import { uiActions } from '../../store/slices/ui-slice';
+import { NoticeType } from 'antd/es/message/interface';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -27,7 +28,7 @@ const AuthIcon = (props: Partial<CustomIconComponentProps>) => (
 );
 
 type RegisterFormProps = {
-  errorMessage: (error: string) => void;
+  showMessage: (type: NoticeType, content: string) => void;
 };
 
 type FieldType = {
@@ -39,7 +40,7 @@ type FieldType = {
   phone?: string;
 };
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ errorMessage }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ showMessage }) => {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -72,9 +73,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ errorMessage }) => {
       const axiosError = error as AxiosError<string>;
 
       if (axiosError.response?.data) {
-        errorMessage(axiosError.response.data);
+        showMessage('error', `Произошла ошибка: ${axiosError.response.data}`);
       } else {
-        errorMessage('Unknown error!');
+        showMessage('error', 'Произошла неизвестная ошибка!');
       }
     } finally {
       setIsFetchingHandler(false);

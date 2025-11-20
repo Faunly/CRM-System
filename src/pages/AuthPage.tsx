@@ -1,18 +1,19 @@
-import { Flex, Image, message, Modal } from 'antd';
+import { Flex, Image, message } from 'antd';
 
 import backgroundImage from '../assets/AuthPage/background.png';
 import RegisterForm from '../components/RegisterForm/RegisterForm';
 import LoginForm from '../components/LoginForm/LoginForm.tsx';
 import { useLocation } from 'react-router';
+import { NoticeType } from 'antd/es/message/interface';
 
 const AuthPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const location = useLocation();
 
-  const errorMessage = (error: string) => {
+  const showMessage = (type: NoticeType, content: string) => {
     messageApi.open({
-      type: 'error',
-      content: `Произошла ошибка: ${error}`,
+      type,
+      content,
       duration: 5,
     });
   };
@@ -22,13 +23,9 @@ const AuthPage = () => {
       {contextHolder}
       <Image src={backgroundImage} preview={false} height={'100vh'} />
       {location.pathname === '/login' ? (
-        <LoginForm
-          errorMessage={errorMessage}
-        />
+        <LoginForm showMessage={showMessage} />
       ) : (
-        <RegisterForm
-          errorMessage={errorMessage}
-        />
+        <RegisterForm showMessage={showMessage} />
       )}
     </Flex>
   );

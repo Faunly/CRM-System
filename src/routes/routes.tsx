@@ -1,12 +1,21 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, redirect } from 'react-router';
 
 import Profile from '../pages/ProfilePage';
 import TodoList from '../pages/TodoListPage';
 import AuthPage from '../pages/AuthPage';
 import App from '../App';
 
-import { checkAuthLoader } from '../util/auth';
-import { accessTokenLoader } from '../util/tokens';
+import { accessTokenLoader } from '../util/refreshTokenManager';
+import { selectIsAuth } from '../store/selectors/uiSelectors';
+import store from '../store';
+
+const checkAuthLoader = () => {
+  const isAuth = selectIsAuth(store.getState());
+  if (!isAuth) {
+    return redirect('/login');
+  }
+  return null;
+};
 
 export const router = createBrowserRouter([
   {
