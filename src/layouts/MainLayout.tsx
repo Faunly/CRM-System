@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 import type { MenuProps } from 'antd';
 import { Layout, Menu } from 'antd';
 import { ContainerOutlined, UserOutlined } from '@ant-design/icons';
@@ -7,12 +7,10 @@ import { ContainerOutlined, UserOutlined } from '@ant-design/icons';
 type MenuItem = Required<MenuProps>['items'][number];
 const { Sider } = Layout;
 
-
-const App = () => {
+const MainLayout = () => {
   const [siderItem, setSiderItem] = useState('todo');
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const itemsSider: MenuItem[] = [
     {
@@ -31,21 +29,19 @@ const App = () => {
 
   return (
     <Layout hasSider style={{ height: '100vh' }}>
-      {location.pathname !== '/login' && location.pathname !== '/register' && (
-        <Sider theme="light">
-          <Menu
-            items={itemsSider}
-            mode="inline"
-            defaultSelectedKeys={[`${siderItem}`]}
-            onSelect={(key) => {
-              setSiderItem(key.key);
-            }}
-          ></Menu>
-        </Sider>
-      )}
+      <Sider theme="light">
+        <Menu
+          items={itemsSider}
+          mode="inline"
+          defaultSelectedKeys={[`${siderItem}`]}
+          onSelect={(key) => {
+            setSiderItem(key.key);
+          }}
+        ></Menu>
+      </Sider>
       <Outlet />
     </Layout>
   );
 };
 
-export default App;
+export default MainLayout;
