@@ -1,31 +1,38 @@
-import { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 import type { MenuProps } from 'antd';
 import { Layout, Menu } from 'antd';
 import { ContainerOutlined, UserOutlined } from '@ant-design/icons';
+
+import { selectIsAuth } from '../store/selectors/uiSelectors';
 
 type MenuItem = Required<MenuProps>['items'][number];
 const { Sider } = Layout;
 
 const MainLayout = () => {
-  const [siderItem, setSiderItem] = useState('todo');
-
   const navigate = useNavigate();
+  const location = useLocation();
 
   const itemsSider: MenuItem[] = [
     {
-      key: 'todo',
+      key: '/todo',
       icon: <ContainerOutlined />,
       label: 'Todo-List',
-      onClick: () => navigate('/todo'),
+      onClick: () => {
+        navigate('/todo');
+        console.log(location.pathname);
+      },
     },
     {
-      key: 'profile',
+      key: '/profile',
       icon: <UserOutlined />,
       label: 'Профиль',
       onClick: () => navigate('/profile'),
     },
   ];
+
+  if (!selectIsAuth) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <Layout hasSider style={{ height: '100vh' }}>
@@ -33,10 +40,7 @@ const MainLayout = () => {
         <Menu
           items={itemsSider}
           mode="inline"
-          defaultSelectedKeys={[`${siderItem}`]}
-          onSelect={(key) => {
-            setSiderItem(key.key);
-          }}
+          selectedKeys={[location.pathname]}
         ></Menu>
       </Sider>
       <Outlet />
