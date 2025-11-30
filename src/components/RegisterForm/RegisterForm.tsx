@@ -40,6 +40,14 @@ type FieldType = {
   phone?: string;
 };
 
+const MAX_LENGHT_NAME = 60;
+
+const MIN_LENGHT_LOGIN = 2;
+const MAX_LENGHT_LOGIN = 60;
+
+const MIN_LENGHT_PASS = 6;
+const MAX_LENGHT_PASS = 60;
+
 const RegisterForm: React.FC<RegisterFormProps> = ({ showMessage }) => {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
@@ -112,8 +120,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ showMessage }) => {
                   message: 'Пожалуйста, введите имя пользователя!',
                 },
                 {
-                  max: 60,
-                  message: 'Максимальное кол-во символов: 60',
+                  max: MAX_LENGHT_NAME,
+                  message: `Максимальное кол-во символов: ${MAX_LENGHT_NAME}`,
                 },
                 {
                   type: 'string',
@@ -132,12 +140,15 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ showMessage }) => {
               rules={[
                 {
                   required: true,
-                  min: 2,
                   message: 'Пожалуйста, введите логин!',
                 },
                 {
-                  max: 60,
-                  message: 'Максимальное кол-во символов: 60',
+                  min: MIN_LENGHT_LOGIN,
+                  message: `Минимальное кол-во символов: ${MIN_LENGHT_LOGIN}`,
+                },
+                {
+                  max: MAX_LENGHT_LOGIN,
+                  message: `Максимальное кол-во символов: 60 ${MAX_LENGHT_LOGIN}`,
                 },
                 {
                   type: 'string',
@@ -159,12 +170,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ showMessage }) => {
                   message: 'Пожалуйста, введите пароль!',
                 },
                 {
-                  min: 6,
-                  message: 'Минимальное кол-во символов: 6',
+                  min: MIN_LENGHT_PASS,
+                  message: `Минимальное кол-во символов: ${MIN_LENGHT_PASS}`,
                 },
                 {
-                  max: 60,
-                  message: 'Максимальное кол-во символов: 60',
+                  max: MAX_LENGHT_PASS,
+                  message: `Максимальное кол-во символов: ${MAX_LENGHT_PASS}`,
                 },
               ]}
             >

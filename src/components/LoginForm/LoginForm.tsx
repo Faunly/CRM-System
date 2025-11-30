@@ -35,6 +35,9 @@ type FieldType = {
   remember?: string;
 };
 
+const MIN_LENGHT_LOGIN = 2;
+const MIN_LENGHT_PASS = 6;
+
 const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
   const [form] = Form.useForm();
   const { setIsAuth, setIsFetching } = useUIActions();
@@ -91,8 +94,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
               rules={[
                 {
                   required: true,
-                  min: 2,
                   message: 'Пожалуйста, введите логин!',
+                },
+                {
+                  min: MIN_LENGHT_LOGIN,
+                  message: `Минимальное кол-во символов: ${MIN_LENGHT_LOGIN}`,
                 },
               ]}
             >
@@ -109,8 +115,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
                   message: 'Пожалуйста, введите пароль!',
                 },
                 {
-                  min: 6,
-                  message: 'Минимальное кол-во символов: 6',
+                  min: MIN_LENGHT_PASS,
+                  message: `Минимальное кол-во символов: ${MIN_LENGHT_PASS}`,
                 },
               ]}
             >
