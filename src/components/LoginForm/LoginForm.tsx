@@ -1,6 +1,5 @@
 import {
   Button,
-  Checkbox,
   Flex,
   Form,
   FormProps,
@@ -13,7 +12,7 @@ import Icon from '@ant-design/icons';
 import SvgloginIcon from '../../assets/AuthPage/SvgLoginIcon';
 import classes from './LoginForm.module.css';
 import { AxiosError } from 'axios';
-import { LoginUser } from '../../api/auth';
+import { loginUser } from '../../api/auth';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { useUIActions } from '../../store/hooks/useUIActions';
@@ -46,7 +45,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     try {
       setIsFetching(true);
-      await LoginUser(values);
+      await loginUser(values);
       form.resetFields(['login', 'password', 'remember']);
       console.log('login success');
       showMessage('success', 'Вы успешно авторизовались!');
@@ -116,14 +115,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
               ]}
             >
               <Input.Password className={classes.input} />
-            </Form.Item>
-
-            <Form.Item<FieldType>
-              name="remember"
-              valuePropName="checked"
-              label={null}
-            >
-              <Checkbox>Remember me</Checkbox>
             </Form.Item>
 
             <Form.Item<FieldType> label={null}>

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { RegisterTypes, LoginTypes } from '../types/auth';
+import { BackendRegisterPayload, LoginTypes } from '../types/auth';
 import { getRefreshToken, setRefreshToken } from '../util/refreshTokenManager';
 import { getAccessToken, setAccessToken } from '../util/accessTokenManager';
 
@@ -11,9 +11,12 @@ const instanceAxios = axios.create({
   },
 });
 
-export const registerUser = async (data: RegisterTypes) => {
+export const registerUser = async (data: BackendRegisterPayload) => {
   try {
-    const response = await instanceAxios.post<RegisterTypes>('signup', data);
+    const response = await instanceAxios.post<BackendRegisterPayload>(
+      'signup',
+      data,
+    );
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -24,14 +27,11 @@ export const registerUser = async (data: RegisterTypes) => {
   }
 };
 
-export const LoginUser = async (data: LoginTypes) => {
+export const loginUser = async (data: LoginTypes) => {
   try {
     const response = await instanceAxios.post<LoginTypes, AxiosResponse>(
       'signin',
-      {
-        login: data.login,
-        password: data.password,
-      },
+      data,
     );
     const accessToken = response?.data.accessToken;
     const refreshToken = response?.data.refreshToken;

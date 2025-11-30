@@ -64,7 +64,7 @@ export const getProfileData = async () => {
 
 export const logoutUser = async () => {
   try {
-    const response = await instanceAxios.post<AxiosResponse>('logout', {});
+    const response = await instanceAxios.post<AxiosResponse>('logout');
     console.log('logout');
 
     return response?.data;
