@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { ProfileDataType } from '../types/profile';
 
 import { useNavigate } from 'react-router';
-import { useUIActions } from '../store/hooks/useUIActions';
+import { useAuthActions } from '../store/hooks/useAuthActions';
 
 const { Text, Title } = Typography;
 
 const Profile = () => {
   const [profileData, setProfileData] = useState<ProfileDataType | null>(null);
-  const { setIsAuth } = useUIActions();
+  const { setIsAuth } = useAuthActions();
   const navigate = useNavigate();
 
   const getProfileDataHandler = async () => {

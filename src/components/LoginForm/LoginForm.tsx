@@ -15,7 +15,7 @@ import { AxiosError } from 'axios';
 import { loginUser } from '../../api/auth';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
-import { useUIActions } from '../../store/hooks/useUIActions';
+import { useAuthActions } from '../../store/hooks/useAuthActions';
 import { selectIsFetching } from '../../store/selectors/uiSelectors';
 import { NoticeType } from 'antd/es/message/interface';
 
@@ -40,7 +40,7 @@ const MIN_LENGHT_PASS = 6;
 
 const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
   const [form] = Form.useForm();
-  const { setIsAuth, setIsFetching } = useUIActions();
+  const { setIsAuth, setIsFetching } = useAuthActions();
   const navigate = useNavigate();
 
   const isFetching = useSelector(selectIsFetching);

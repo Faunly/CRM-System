@@ -1,7 +1,10 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '..';
 
-const selectUI = (state: RootState) => state.ui;
+const selectAuth = (state: RootState) => state.auth;
 
-export const selectIsAuth = createSelector(selectUI, (ui) => ui.isAuth);
-export const selectIsFetching = createSelector(selectUI, (ui) => ui.isFetching);
+export const selectIsAuth = createSelector(selectAuth, (auth) => auth.isAuth);
+export const selectIsFetching = createSelector(
+  selectAuth,
+  (auth) => auth.isFetching,
+);

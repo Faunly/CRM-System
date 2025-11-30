@@ -18,7 +18,7 @@ import { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { RootState } from '../../store';
 import { useSelector, useDispatch } from 'react-redux';
-import { uiActions } from '../../store/slices/ui-slice';
+import { authActions } from '../../store/slices/auth-slice';
 import { NoticeType } from 'antd/es/message/interface';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
@@ -53,10 +53,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ showMessage }) => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const isFetching = useSelector((state: RootState) => state.ui.isFetching);
+  const isFetching = useSelector((state: RootState) => state.auth.isFetching);
 
   const setIsFetchingHandler = (state: boolean) => {
-    dispatch(uiActions.setIsFetching(state));
+    dispatch(authActions.setIsFetching(state));
   };
 
   const showModal = () => {
@@ -67,15 +67,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ showMessage }) => {
     try {
       setIsFetchingHandler(true);
       await registerUser(values);
-      form.resetFields([
-        'register',
-        'username',
-        'login',
-        'password',
-        'confirm',
-        'email',
-        'phone',
-      ]);
+      form.resetFields();
       showModal();
     } catch (error) {
       const axiosError = error as AxiosError<string>;

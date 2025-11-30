@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = { isFetching: false, isAuth: false };
 
-const uiSlice = createSlice({
-  name: 'ui',
+const authSlice = createSlice({
+  name: 'auth',
   initialState: initialState,
   reducers: {
     setIsFetching(state, action) {
@@ -15,5 +15,5 @@ const uiSlice = createSlice({
   },
 });
 
-export default uiSlice.reducer;
-export const uiActions = uiSlice.actions;
+export default authSlice.reducer;
+export const authActions = authSlice.actions;
