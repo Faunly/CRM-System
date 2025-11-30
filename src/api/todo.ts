@@ -1,5 +1,6 @@
 import { FilterTypes } from '../types/filter';
 import axios from 'axios';
+import { TasksType } from '../types/todolist';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1',
@@ -11,7 +12,7 @@ const instanceAxios = axios.create({
 
 export const getTasksByCategory = async (filter: FilterTypes) => {
   try {
-    const response = await instanceAxios.get('/todos', {
+    const response = await instanceAxios.get<TasksType>('/todos', {
       params: { filter },
     });
     return await response.data;
@@ -22,7 +23,7 @@ export const getTasksByCategory = async (filter: FilterTypes) => {
 
 export const addTask = async (titleTask: string) => {
   try {
-    const response = await instanceAxios.post('/todos', {
+    const response = await instanceAxios.post<TasksType>('/todos', {
       isDone: false,
       title: titleTask,
     });
@@ -38,7 +39,7 @@ export const changeDataTask = async (
   isDone: boolean,
 ) => {
   try {
-    const response = await instanceAxios.put(`/todos/${id}`, {
+    const response = await instanceAxios.put<TasksType>(`/todos/${id}`, {
       isDone: isDone,
       title: titleTask,
     });

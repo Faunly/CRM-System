@@ -1,8 +1,9 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { cleanTokens } from '../util/auth';
 import { updateAccessToken } from './auth';
 import { forceLogout } from '../util/auth';
 import { getAccessToken } from '../util/accessTokenManager';
+import { ProfileDataType } from '../types/profile';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/user/',
@@ -50,7 +51,7 @@ instanceAxios.interceptors.response.use(
 
 export const getProfileData = async () => {
   try {
-    const response = await instanceAxios.get('profile');
+    const response = await instanceAxios.get<ProfileDataType>('profile');
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -63,7 +64,7 @@ export const getProfileData = async () => {
 
 export const logoutUser = async () => {
   try {
-    const response = await instanceAxios.post('logout', {});
+    const response = await instanceAxios.post<AxiosResponse>('logout', {});
     console.log('logout');
 
     return response?.data;

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { RegisterTypes, LoginTypes } from '../types/auth';
 import { getRefreshToken, setRefreshToken } from '../util/refreshTokenManager';
 import { getAccessToken, setAccessToken } from '../util/accessTokenManager';
@@ -13,13 +13,7 @@ const instanceAxios = axios.create({
 
 export const registerUser = async (data: RegisterTypes) => {
   try {
-    const response = await instanceAxios.post('signup', {
-      email: data.email,
-      login: data.login,
-      password: data.password,
-      phoneNumber: data.phone,
-      username: data.username,
-    });
+    const response = await instanceAxios.post<RegisterTypes>('signup', data);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -32,10 +26,13 @@ export const registerUser = async (data: RegisterTypes) => {
 
 export const LoginUser = async (data: LoginTypes) => {
   try {
-    const response = await instanceAxios.post('signin', {
-      login: data.login,
-      password: data.password,
-    });
+    const response = await instanceAxios.post<LoginTypes, AxiosResponse>(
+      'signin',
+      {
+        login: data.login,
+        password: data.password,
+      },
+    );
     const accessToken = response?.data.accessToken;
     const refreshToken = response?.data.refreshToken;
 
@@ -56,7 +53,10 @@ export const updateAccessToken = async () => {
   try {
     let accessToken = getAccessToken();
     let refreshToken = getRefreshToken();
-    const response = await instanceAxios.post(
+    const response = await instanceAxios.post<
+      { refreshToken: string },
+      AxiosResponse
+    >(
       'refresh',
       { refreshToken },
       {
