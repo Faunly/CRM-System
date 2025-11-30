@@ -38,9 +38,9 @@ const TaskItem: FC<TaskItemProps> = ({
   fetchTasksByFilter,
 }) => {
   const [form] = Form.useForm<FieldType>();
-  const [isEdited, setIsEdited] = useState(false);
-  const [curTitleTask, setCurTitleTask] = useState(titleTask);
-  const [prevTaskTitle, setPrevTaskTitle] = useState('');
+  const [isEdited, setIsEdited] = useState<boolean>(false);
+  const [curTitleTask, setCurTitleTask] = useState<string>(titleTask);
+  const [prevTaskTitle, setPrevTaskTitle] = useState<string>('');
   const [notificationApi, notificationContextHolder] =
     notification.useNotification();
 
@@ -81,16 +81,16 @@ const TaskItem: FC<TaskItemProps> = ({
     setPrevTaskTitle(curTitleTask);
   };
 
-  const handleCancel = () => {
+  const handleCancelSubmitTodo = () => {
     setCurTitleTask(prevTaskTitle);
     setIsEdited((prevState) => !prevState);
   };
 
   const onFinish = (value: FieldType) => {
-    handleChangeDataTask(id, value.editTitleTask, isDone)
-    setCurTitleTask(value.editTitleTask)
-    setIsEdited(prevState => !prevState)
-  }
+    handleChangeDataTask(id, value.editTitleTask, isDone);
+    setCurTitleTask(value.editTitleTask);
+    setIsEdited((prevState) => !prevState);
+  };
 
   return (
     <Form form={form} onFinish={onFinish}>
@@ -153,7 +153,7 @@ const TaskItem: FC<TaskItemProps> = ({
               <Button
                 style={{ backgroundColor: '#ff4747' }}
                 onClick={() => {
-                  handleCancel();
+                  handleCancelSubmitTodo();
                 }}
               >
                 <CloseCircleFilled

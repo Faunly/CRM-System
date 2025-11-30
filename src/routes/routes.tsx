@@ -6,7 +6,7 @@ import AuthPage from '../pages/AuthPage';
 import MainLayout from '../layouts/MainLayout';
 import AuthLayout from '../layouts/AuthLayout';
 
-import { accessTokenLoader } from '../util/refreshTokenManager';
+import { accessTokenLoader } from '../util/tokenManager';
 
 export const router = createBrowserRouter([
   {

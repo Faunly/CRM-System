@@ -50,7 +50,7 @@ const MAX_LENGHT_PASS = 60;
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ showMessage }) => {
   const [form] = Form.useForm();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const isFetching = useSelector((state: RootState) => state.auth.isFetching);

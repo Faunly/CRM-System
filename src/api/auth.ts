@@ -1,7 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 import { BackendRegisterPayload, LoginTypes } from '../types/auth';
-import { getRefreshToken, setRefreshToken } from '../util/refreshTokenManager';
-import { getAccessToken, setAccessToken } from '../util/accessTokenManager';
+import {
+  getAccessToken,
+  setAccessToken,
+  getRefreshToken,
+  setRefreshToken,
+} from '../util/tokenManager';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/auth',

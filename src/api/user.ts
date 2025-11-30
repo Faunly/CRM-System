@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
-import { cleanTokens } from '../util/auth';
+import { cleanTokens } from '../util/tokenManager';
 import { updateAccessToken } from './auth';
 import { forceLogout } from '../util/auth';
-import { getAccessToken } from '../util/accessTokenManager';
+import { getAccessToken } from '../util/tokenManager';
 import { ProfileDataType } from '../types/profile';
 
 const instanceAxios = axios.create({

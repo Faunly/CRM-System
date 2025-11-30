@@ -14,7 +14,7 @@ type FieldType = {
 
 const AddTask: FC<AddTaskProps> = memo(({ fetchTasksByFilter }) => {
   const [form] = Form.useForm<FieldType>();
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const handleAddTask = async () => {
     try {

@@ -1,6 +1,6 @@
 import { FilterTypes } from '../types/filter';
 import axios from 'axios';
-import { TasksType } from '../types/todolist';
+import { MetaResponse, TasksType } from '../types/todolist';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1',
@@ -12,7 +12,7 @@ const instanceAxios = axios.create({
 
 export const getTasksByCategory = async (filter: FilterTypes) => {
   try {
-    const response = await instanceAxios.get<TasksType>('/todos', {
+    const response = await instanceAxios.get<MetaResponse>('/todos', {
       params: { filter },
     });
     return await response.data;
