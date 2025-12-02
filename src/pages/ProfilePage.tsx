@@ -1,9 +1,51 @@
-import { Typography } from 'antd'
+import { Button, Flex, Typography } from 'antd';
+import { getProfileData, logoutUser } from '../api/user';
+import { useEffect, useState } from 'react';
+import { ProfileDataType } from '../types/profile';
 
-const { Text } = Typography
+import { useNavigate } from 'react-router';
+import { useAuthActions } from '../store/hooks/useAuthActions';
+
+const { Text, Title } = Typography;
 
 const Profile = () => {
-    return <Text>Привет!!!</Text>
-}
+  const [profileData, setProfileData] = useState<ProfileDataType | null>(null);
+  const { setIsAuth } = useAuthActions();
+  const navigate = useNavigate();
 
-export default Profile
+  const getProfileDataHandler = async () => {
+    try {
+      const data = await getProfileData();
+      setProfileData(data);
+    } catch {
+      throw new Error('Ошибка получения данных!');
+    }
+  };
+
+  const logoutHandler = () => {
+    try {
+      logoutUser();
+      setIsAuth(false);
+      navigate('/login');
+    } catch {
+      throw new Error('Ошибка завершения сессии!');
+    }
+  };
+
+  useEffect(() => {
+    getProfileDataHandler();
+  }, []);
+
+  return (
+    <>
+      <Flex vertical>
+        <Title>Профиль пользователя {profileData?.username}</Title>
+        <Text>Почта: {profileData?.email}</Text>
+        <Text>Телефон: {profileData?.phoneNumber || 'Нет'}</Text>
+        <Button onClick={logoutHandler}>Выйти</Button>
+      </Flex>
+    </>
+  );
+};
+
+export default Profile;
