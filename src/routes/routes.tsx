@@ -7,6 +7,7 @@ import MainLayout from '../layouts/MainLayout';
 import AuthLayout from '../layouts/AuthLayout';
 
 import { accessTokenLoader } from '../util/tokenManager';
+import UsersPage from '../pages/UsersPage';
 
 export const router = createBrowserRouter([
   {
@@ -22,8 +23,9 @@ export const router = createBrowserRouter([
     loader: accessTokenLoader,
     children: [
       { index: true, element: <TodoList /> },
-      { path: 'profile', element: <Profile /> },
       { path: 'todo', element: <TodoList /> },
+      { path: 'profile', element: <Profile /> },
+      { path: 'users', element: <UsersPage />}
     ],
   },
 ]);

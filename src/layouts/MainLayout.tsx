@@ -1,7 +1,11 @@
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 import type { MenuProps } from 'antd';
 import { Layout, Menu } from 'antd';
-import { ContainerOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  ContainerOutlined,
+  UserOutlined,
+  UsergroupAddOutlined,
+} from '@ant-design/icons';
 
 import { selectIsAuth } from '../store/selectors/uiSelectors';
 
@@ -27,6 +31,12 @@ const MainLayout = () => {
       icon: <UserOutlined />,
       label: 'Профиль',
       onClick: () => navigate('/profile'),
+    },
+    {
+      key: '/users',
+      icon: <UsergroupAddOutlined />,
+      label: 'Пользователи',
+      onClick: () => navigate('/users'),
     },
   ];
 
