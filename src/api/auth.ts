@@ -41,6 +41,7 @@ export const loginUser = async (data: LoginTypes) => {
     const refreshToken = response?.data.refreshToken;
 
     setRefreshToken(refreshToken);
+    console.log(accessToken);
     setAccessToken(accessToken);
 
     return response;

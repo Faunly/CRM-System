@@ -1,4 +1,4 @@
-export type Role = 'ADMIN' | 'USER' | 'MODERATOR';
+export type Role = 'ADMIN' | 'USER' | 'MODERATOR' | 'HUILA';
 
 export interface ProfileDataType {
   id: number;
@@ -8,4 +8,13 @@ export interface ProfileDataType {
   isBlocked: boolean;
   roles: Role[];
   phoneNumber: string;
+}
+
+export interface UsersData {
+  data: ProfileDataType[];
+  meta: {
+    totalAmount: number;
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+  };
 }
