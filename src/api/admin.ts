@@ -48,11 +48,15 @@ instanceAxios.interceptors.response.use(
   },
 );
 
-export const getUsersData = async () => {
+export const getUsersData = async (pageMeta: {
+  currentPage?: number;
+  currentLimit?: number;
+}) => {
   try {
     const response = await instanceAxios.get<UsersData>('', {
       params: {
-        limit: 100,
+        page: pageMeta.currentPage,
+        limit: pageMeta.currentLimit,
       },
     });
     return response?.data.data;

@@ -3,6 +3,7 @@ import { getUsersData } from '../api/admin';
 import { useEffect, useState } from 'react';
 import { ProfileDataType, Role } from '../types/profile';
 import dayjs from 'dayjs';
+import { current } from '@reduxjs/toolkit';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -12,6 +13,8 @@ const columns: TableProps['columns'] = [
     title: 'Имя',
     dataIndex: 'username',
     key: 'username',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.username.length - b.username.length,
   },
   {
     title: 'Email',
@@ -69,11 +72,31 @@ const columns: TableProps['columns'] = [
 
 const UsersPage = () => {
   const [usersData, setUsersData] = useState<ProfileDataType[]>([]);
+  const [pageMeta, setPageMeta] = useState<{
+    currentPage?: number;
+    currentLimit?: number;
+  }>({
+    currentPage: 1,
+    currentLimit: 10,
+  });
 
   const getUsersDataHandler = async () => {
-    const data = await getUsersData();
+    const data = await getUsersData(pageMeta);
     setUsersData(data);
     console.log(data);
+  };
+
+  const onChangeTable: TableProps['onChange'] = (
+    pagination,
+    filters,
+    sorter,
+    extra,
+  ) => {
+    console.log('params', pagination, filters, sorter, extra);
+    setPageMeta({
+      currentPage: pagination.current,
+      currentLimit: pagination.total,
+    });
   };
 
   useEffect(() => {
@@ -89,6 +112,7 @@ const UsersPage = () => {
         <Table
           columns={columns}
           dataSource={usersData}
+          onChange={onChangeTable}
           scroll={{ y: '40vw' }}
           size="middle"
           // pagination={{ total: 20 }}
