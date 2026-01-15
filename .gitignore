@@ -25,3 +25,9 @@ yarn.lock
 *.njsproj
 *.sln
 *.sw?
+
+
+# NixOS files environment
+shell.nix
+.direnv
+.envrc
