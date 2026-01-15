@@ -10,11 +10,13 @@ export interface ProfileDataType {
   phoneNumber: string;
 }
 
+export interface UsersMeta {
+  totalAmount: number;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+}
+
 export interface UsersData {
   data: ProfileDataType[];
-  meta: {
-    totalAmount: number;
-    sortBy: string;
-    sortOrder: 'asc' | 'desc';
-  };
+  meta: UsersMeta;
 }

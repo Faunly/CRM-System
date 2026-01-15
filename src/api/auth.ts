@@ -81,7 +81,7 @@ export const updateAccessToken = async () => {
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
 
-    console.log('Access Token update successfully!');
+    console.log('Access Token update successfully!', ':', accessToken);
 
     return response?.data;
   } catch (error) {
