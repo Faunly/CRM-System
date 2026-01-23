@@ -159,7 +159,7 @@ const UsersPage = () => {
     pageMeta.isBlocked,
     pageMeta.sortField,
     pageMeta.sortOrder,
-    pageMeta.searchQuery
+    pageMeta.searchQuery,
   ]);
 
   const onChangeTable: TableProps['onChange'] = (
@@ -228,11 +228,15 @@ const UsersPage = () => {
           onChange={onChangeTable}
           scroll={{ y: '80vh', x: '100ww' }}
           size="middle"
-          pagination={{
-            total: usersMeta?.totalAmount,
-            current: pageMeta.currentPage,
-            pageSize: pageMeta.currentLimit,
-          }}
+          pagination={
+            (usersMeta?.totalAmount ?? 0) > 20
+              ? {
+                  total: usersMeta?.totalAmount,
+                  current: pageMeta.currentPage,
+                  pageSize: pageMeta.currentLimit,
+                }
+              : false
+          }
         />
       </Content>
     </Flex>
