@@ -7,11 +7,14 @@ import {
   Tag,
   Space,
   Button,
+  Input,
+  GetProps,
 } from 'antd';
 import { getUsersData } from '../api/admin';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ProfileDataType, Role, UsersMeta } from '../types/profile';
 import dayjs from 'dayjs';
+type SearchProps = GetProps<typeof Input.Search>;
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -21,14 +24,12 @@ const columns: TableProps['columns'] = [
     title: 'Имя',
     dataIndex: 'username',
     key: 'username',
-    // defaultSortOrder: 'ascend',
     sorter: true,
   },
   {
     title: 'Email',
     dataIndex: 'email',
     key: 'email',
-    // defaultSortOrder: 'ascend',
     sorter: true,
   },
   {
@@ -110,12 +111,14 @@ const UsersPage = () => {
     isBlocked: boolean | null;
     sortField: string | null;
     sortOrder: string | null;
+    searchQuery: string | null;
   }>({
     currentPage: 1,
     currentLimit: 10,
     isBlocked: null,
     sortField: null,
     sortOrder: null,
+    searchQuery: null,
   });
 
   const loadDataHandler = async () => {
@@ -135,6 +138,10 @@ const UsersPage = () => {
         params.sortBy = pageMeta.sortField;
       }
 
+      if (pageMeta.searchQuery) {
+        params.search = pageMeta.searchQuery;
+      }
+
       const data = await getUsersData(params);
       setUsersData(data.data);
       setUsersMeta(data.meta);
@@ -146,7 +153,14 @@ const UsersPage = () => {
   useEffect(() => {
     loadDataHandler();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageMeta.currentPage, pageMeta.currentLimit, pageMeta.isBlocked, pageMeta.sortField, pageMeta.sortOrder]);
+  }, [
+    pageMeta.currentPage,
+    pageMeta.currentLimit,
+    pageMeta.isBlocked,
+    pageMeta.sortField,
+    pageMeta.sortOrder,
+    pageMeta.searchQuery
+  ]);
 
   const onChangeTable: TableProps['onChange'] = (
     pagination,
@@ -159,7 +173,8 @@ const UsersPage = () => {
     const blockValueSortField = singleSorter.field;
     const sortOrderValue = singleSorter.order;
 
-    setPageMeta({
+    setPageMeta((prev) => ({
+      ...prev,
       currentPage: pagination.current || 1,
       currentLimit: pagination.pageSize || 10,
       isBlocked:
@@ -171,7 +186,26 @@ const UsersPage = () => {
           : sortOrderValue === 'descend'
             ? 'desc'
             : null,
-    });
+    }));
+  };
+
+  const timerRef = useRef<number | null>(null);
+
+  const searchHandler: SearchProps['onChange'] = (e) => {
+    const value = e.target.value;
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    timerRef.current = setTimeout(() => {
+      setPageMeta((prev) => ({
+        ...prev,
+        searchQuery: value,
+      }));
+
+      timerRef.current = null;
+    }, 1000);
   };
 
   return (
@@ -179,7 +213,15 @@ const UsersPage = () => {
       <Header style={{ backgroundColor: 'transparent', height: 'unset' }}>
         <Title>Пользователи</Title>
       </Header>
+
       <Content style={{ padding: '0 3rem' }}>
+        <Flex justify="end">
+          <Input
+            placeholder="Поиск по имени или почте..."
+            style={{ width: 200 }}
+            onChange={searchHandler}
+          />
+        </Flex>
         <Table
           columns={columns}
           dataSource={usersData}

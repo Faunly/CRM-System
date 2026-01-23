@@ -54,6 +54,7 @@ export const getUsersData = async (params: {
   isBloked: boolean;
   sortOrder: string;
   sortBy: string;
+  search: string
 }) => {
   try {
     console.log(params);
