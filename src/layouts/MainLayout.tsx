@@ -46,7 +46,7 @@ const MainLayout = () => {
 
   return (
     <Layout hasSider style={{ height: '100vh' }}>
-      <Sider theme="light">
+      <Sider theme="light" style={{ maxWidth: '10%' }}>
         <Menu
           items={itemsSider}
           mode="inline"

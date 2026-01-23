@@ -48,16 +48,17 @@ instanceAxios.interceptors.response.use(
   },
 );
 
-export const getUsersData = async (pageMeta: {
+export const getUsersData = async (params: {
   currentPage: number;
   currentLimit: number;
+  isBloked: boolean;
+  sortOrder: string;
+  sortBy: string;
 }) => {
   try {
+    console.log(params);
     const response = await instanceAxios.get<UsersData>('', {
-      params: {
-        page: pageMeta.currentPage - 1,
-        limit: pageMeta.currentLimit,
-      },
+      params,
     });
     return response?.data;
   } catch (error) {

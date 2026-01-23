@@ -1,4 +1,13 @@
-import { Flex, Layout, Typography, Table, TableProps, Tag } from 'antd';
+import {
+  Flex,
+  Layout,
+  Typography,
+  Table,
+  TableProps,
+  Tag,
+  Space,
+  Button,
+} from 'antd';
 import { getUsersData } from '../api/admin';
 import { useEffect, useState } from 'react';
 import { ProfileDataType, Role, UsersMeta } from '../types/profile';
@@ -12,12 +21,15 @@ const columns: TableProps['columns'] = [
     title: 'Имя',
     dataIndex: 'username',
     key: 'username',
-    sorter: (a, b) => a.username.localeCompare(b.username, 'en'),
+    // defaultSortOrder: 'ascend',
+    sorter: true,
   },
   {
     title: 'Email',
     dataIndex: 'email',
     key: 'email',
+    // defaultSortOrder: 'ascend',
+    sorter: true,
   },
   {
     title: 'Телефон',
@@ -52,9 +64,20 @@ const columns: TableProps['columns'] = [
   },
   {
     title: 'Блокировка',
-    dataIndex: 'isBlock',
-    key: 'isBlock',
-    render: (_, { isBlock }) => <Text>{isBlock ? '+' : '-'}</Text>,
+    dataIndex: 'isBlocked',
+    key: 'isBlocked',
+    render: (isBlock) => <Text>{isBlock ? 'да' : 'нет'}</Text>,
+    filterMultiple: false,
+    filters: [
+      {
+        text: '+',
+        value: true,
+      },
+      {
+        text: '-',
+        value: false,
+      },
+    ],
   },
   {
     title: 'Дата регистрации',
@@ -66,20 +89,53 @@ const columns: TableProps['columns'] = [
       }
     },
   },
+  {
+    title: 'Действия',
+    key: 'action',
+    render: () => (
+      <Space>
+        <Button>Заблокировать</Button>
+      </Space>
+    ),
+  },
 ];
 
 const UsersPage = () => {
   const [usersData, setUsersData] = useState<ProfileDataType[]>([]);
   const [usersMeta, setUsersMeta] = useState<UsersMeta>();
 
-  const [pageMeta, setPageMeta] = useState({
+  const [pageMeta, setPageMeta] = useState<{
+    currentPage: number;
+    currentLimit: number;
+    isBlocked: boolean | null;
+    sortField: string | null;
+    sortOrder: string | null;
+  }>({
     currentPage: 1,
     currentLimit: 10,
+    isBlocked: null,
+    sortField: null,
+    sortOrder: null,
   });
 
   const loadDataHandler = async () => {
     try {
-      const data = await getUsersData(pageMeta);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const params: any = {
+        page: pageMeta.currentPage - 1,
+        limit: pageMeta.currentLimit,
+        sortOrder: pageMeta.sortOrder,
+      };
+
+      if (pageMeta.isBlocked) {
+        params.isBlocked = pageMeta.isBlocked;
+      }
+
+      if (pageMeta.sortField) {
+        params.sortBy = pageMeta.sortField;
+      }
+
+      const data = await getUsersData(params);
       setUsersData(data.data);
       setUsersMeta(data.meta);
     } catch (error) {
@@ -89,17 +145,37 @@ const UsersPage = () => {
 
   useEffect(() => {
     loadDataHandler();
-  }, [pageMeta.currentPage, pageMeta.currentLimit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageMeta.currentPage, pageMeta.currentLimit, pageMeta.isBlocked, pageMeta.sortField, pageMeta.sortOrder]);
 
-  const onChangeTable: TableProps['onChange'] = (pagination) => {
+  const onChangeTable: TableProps['onChange'] = (
+    pagination,
+    filters,
+    sorter,
+  ) => {
+    const singleSorter = Array.isArray(sorter) ? sorter[0] : sorter;
+
+    const blockValueFilter = filters.isBlocked?.[0];
+    const blockValueSortField = singleSorter.field;
+    const sortOrderValue = singleSorter.order;
+
     setPageMeta({
       currentPage: pagination.current || 1,
       currentLimit: pagination.pageSize || 10,
+      isBlocked:
+        typeof blockValueFilter === 'boolean' ? blockValueFilter : null,
+      sortField: blockValueSortField ? String(blockValueSortField) : null,
+      sortOrder:
+        sortOrderValue === 'ascend'
+          ? 'asc'
+          : sortOrderValue === 'descend'
+            ? 'desc'
+            : null,
     });
   };
 
   return (
-    <Flex vertical style={{ width: '100%' }}>
+    <Flex vertical style={{ maxWidth: '90%' }}>
       <Header style={{ backgroundColor: 'transparent', height: 'unset' }}>
         <Title>Пользователи</Title>
       </Header>
@@ -108,7 +184,7 @@ const UsersPage = () => {
           columns={columns}
           dataSource={usersData}
           onChange={onChangeTable}
-          scroll={{ y: '40vw' }}
+          scroll={{ y: '80vh', x: '100ww' }}
           size="middle"
           pagination={{
             total: usersMeta?.totalAmount,

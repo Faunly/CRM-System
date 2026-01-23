@@ -5,7 +5,7 @@ export interface ProfileDataType {
   username: string;
   email: string;
   date: string;
-  isBlocked: boolean;
+  isBlocked?: boolean;
   roles: Role[];
   phoneNumber: string;
 }
