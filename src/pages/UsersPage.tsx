@@ -11,151 +11,26 @@ import {
   GetProps,
   Dropdown,
 } from 'antd';
-import { getUsersData } from '../api/admin';
+import { blockUser, getUsersData, unblockUser } from '../api/admin';
 import { useEffect, useRef, useState } from 'react';
 import { ProfileDataType, Role, UsersMeta } from '../types/profile';
 import dayjs from 'dayjs';
 type SearchProps = GetProps<typeof Input.Search>;
 import type { MenuProps } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
+import { useAuthActions } from '../store/hooks/useAuthActions';
+import { selectIsFetching } from '../store/selectors/uiSelectors';
+import { useSelector } from 'react-redux';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 
-const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-  console.log('Переход на страницу пользователя', e);
-};
-
-const handleMenuClick: MenuProps['onClick'] = (e) => {
-  switch (e.key) {
-    case 'block':
-      console.log(1);
-      break;
-
-    default:
-      console.log("err");
-  }
-};
-
-// const handleBlockUser = async () => {
-//   try {
-//     const response = await blockUser(id)
-//   } catch (error) {
-    
-//   }
-// }
-
-const items: MenuProps['items'] = [
-  {
-    label: 'За(раз)блокировать',
-    key: 'block',
-  },
-  {
-    label: 'Изменить роли',
-    key: 'roles',
-  },
-  {
-    label: 'Удалить',
-    key: 'delete',
-    danger: true,
-  },
-];
-
-const menuProps = {
-  items,
-  onClick: handleMenuClick,
-};
-
-const columns: TableProps['columns'] = [
-  {
-    title: 'Имя',
-    dataIndex: 'username',
-    key: 'username',
-    sorter: true,
-    fixed: true,
-    render: (name) => {<a onClick={() => console.log(name)}>name</a>}
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    key: 'email',
-    sorter: true,
-  },
-  {
-    title: 'Телефон',
-    dataIndex: 'phoneNumber',
-    key: 'phoneNumber',
-  },
-  {
-    title: 'Роли',
-    dataIndex: 'roles',
-    key: 'roles',
-    render: (_, { roles }) => (
-      <Flex gap="small" align="center" wrap>
-        {roles.map((role: Role) => {
-          let color = 'green';
-          if (role === 'HUILA') {
-            color = 'volcano';
-          }
-          if (role === 'ADMIN') {
-            color = 'yellow';
-          }
-          if (role === 'MODERATOR') {
-            color = 'blue';
-          }
-          return (
-            <Tag color={color} key={role}>
-              {role.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </Flex>
-    ),
-  },
-  {
-    title: 'Заблокирован?',
-    dataIndex: 'isBlocked',
-    key: 'isBlocked',
-    render: (isBlocked) => <Text>{isBlocked ? 'да' : 'нет'}</Text>,
-    filterMultiple: false,
-    filters: [
-      {
-        text: 'Заблокированые',
-        value: true,
-      },
-      {
-        text: 'Разблокированые',
-        value: false,
-      },
-    ],
-  },
-  {
-    title: 'Дата регистрации',
-    dataIndex: 'date',
-    key: 'date',
-    render: (date) => {
-      if (date) {
-        return dayjs(date).format('DD.MM.YYYY');
-      }
-    },
-  },
-  {
-    title: 'Действия',
-    key: 'actions',
-    render: () => (
-      <Space>
-        <Button onClick={handleButtonClick}>Редактировать</Button>
-        <Dropdown menu={menuProps}>
-          <Button icon={<EllipsisOutlined />} />
-        </Dropdown>
-      </Space>
-    ),
-  },
-];
-
 const UsersPage = () => {
   const [usersData, setUsersData] = useState<ProfileDataType[]>([]);
   const [usersMeta, setUsersMeta] = useState<UsersMeta>();
+
+  const isFetching = useSelector(selectIsFetching);
+  const { setIsFetching } = useAuthActions();
 
   const [pageMeta, setPageMeta] = useState<{
     currentPage: number;
@@ -259,6 +134,143 @@ const UsersPage = () => {
       timerRef.current = null;
     }, 1000);
   };
+
+  const handleBlock = async (id: number) => {
+    try {
+      setIsFetching(true);
+      await blockUser(id);
+      await loadDataHandler();
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  const handleUnblock = async (id: number) => {
+    try {
+      setIsFetching(true);
+      await unblockUser(id);
+      await loadDataHandler();
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  const handleEdit = (id: number) => {
+    console.log('Редактировать', id);
+  };
+
+  const columns: TableProps['columns'] = [
+    {
+      title: 'Имя',
+      dataIndex: 'username',
+      key: 'username',
+      sorter: true,
+      fixed: true,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      sorter: true,
+    },
+    {
+      title: 'Телефон',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+    },
+    {
+      title: 'Роли',
+      dataIndex: 'roles',
+      key: 'roles',
+      render: (_, { roles }) => (
+        <Flex gap="small" align="center" wrap>
+          {roles.map((role: Role) => {
+            let color = 'green';
+            if (role === 'HUILA') {
+              color = 'volcano';
+            }
+            if (role === 'ADMIN') {
+              color = 'yellow';
+            }
+            if (role === 'MODERATOR') {
+              color = 'blue';
+            }
+            return (
+              <Tag color={color} key={role}>
+                {role.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </Flex>
+      ),
+    },
+    {
+      title: 'Заблокирован?',
+      dataIndex: 'isBlocked',
+      key: 'isBlocked',
+      render: (isBlocked) => <Text>{isBlocked ? 'да' : 'нет'}</Text>,
+      filterMultiple: false,
+      filters: [
+        {
+          text: 'Заблокированые',
+          value: true,
+        },
+        {
+          text: 'Разблокированые',
+          value: false,
+        },
+      ],
+    },
+    {
+      title: 'Дата регистрации',
+      dataIndex: 'date',
+      key: 'date',
+      render: (date) => {
+        if (date) {
+          return dayjs(date).format('DD.MM.YYYY');
+        }
+      },
+    },
+    {
+      title: 'Действия',
+      key: 'actions',
+      render: (_, record) => {
+        const items: MenuProps['items'] = [
+          record.isBlocked
+            ? {
+                label: 'Разблокировать',
+                key: 'unblock',
+                onClick: () => handleUnblock(record.id),
+                disabled: isFetching,
+              }
+            : {
+                label: 'Заблокировать',
+                key: 'block',
+                onClick: () => handleBlock(record.id),
+                disabled: isFetching,
+              },
+          {
+            label: 'Изменить роли',
+            key: 'roles',
+          },
+          {
+            label: 'Удалить',
+            key: 'delete',
+            danger: true,
+          },
+        ];
+
+        return (
+          <Space>
+            <Button onClick={() => handleEdit(record.id)}>Ред</Button>
+            <Dropdown menu={{ items }}>
+              <Button icon={<EllipsisOutlined />} />
+            </Dropdown>
+          </Space>
+        );
+      },
+    },
+  ];
 
   return (
     <Flex vertical style={{ maxWidth: '90%' }}>

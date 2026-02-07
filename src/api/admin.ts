@@ -81,3 +81,15 @@ export const blockUser = async (id: number) => {
     throw new Error('Неизвестная ошибка');
   }
 };
+
+export const unblockUser = async (id: number) => {
+  try {
+    await instanceAxios.post(`${id}/unblock`);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(error.response?.data);
+      throw Error('Ошибка раблокировки пользователя');
+    }
+    throw new Error('Неизвестная ошибка');
+  }
+};
