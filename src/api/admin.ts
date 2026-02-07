@@ -93,3 +93,15 @@ export const unblockUser = async (id: number) => {
     throw new Error('Неизвестная ошибка');
   }
 };
+
+export const deleteUser = async (id: number) => {
+  try {
+    await instanceAxios.delete(`${id}`);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(error.response?.data);
+      throw Error('Ошибка удаления пользователя');
+    }
+    throw new Error('Неизвестная ошибка');
+  }
+};

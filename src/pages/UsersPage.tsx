@@ -10,8 +10,9 @@ import {
   Input,
   GetProps,
   Dropdown,
+  Popconfirm,
 } from 'antd';
-import { blockUser, getUsersData, unblockUser } from '../api/admin';
+import { blockUser, deleteUser, getUsersData, unblockUser } from '../api/admin';
 import { useEffect, useRef, useState } from 'react';
 import { ProfileDataType, Role, UsersMeta } from '../types/profile';
 import dayjs from 'dayjs';
@@ -135,27 +136,37 @@ const UsersPage = () => {
     }, 1000);
   };
 
-  const handleBlock = async (id: number) => {
+  const blockHandler = async (id: number) => {
     try {
       setIsFetching(true);
       await blockUser(id);
-      await loadDataHandler();
+      loadDataHandler();
     } finally {
       setIsFetching(false);
     }
   };
 
-  const handleUnblock = async (id: number) => {
+  const unblockHandler = async (id: number) => {
     try {
       setIsFetching(true);
       await unblockUser(id);
-      await loadDataHandler();
+      loadDataHandler();
     } finally {
       setIsFetching(false);
     }
   };
 
-  const handleEdit = (id: number) => {
+  const deleteHandler = async (id: number) => {
+    try {
+      setIsFetching(true);
+      await deleteUser(id);
+      loadDataHandler();
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  const editHandler = (id: number) => {
     console.log('Редактировать', id);
   };
 
@@ -240,13 +251,27 @@ const UsersPage = () => {
             ? {
                 label: 'Разблокировать',
                 key: 'unblock',
-                onClick: () => handleUnblock(record.id),
+                onClick: () => unblockHandler(record.id),
                 disabled: isFetching,
               }
             : {
-                label: 'Заблокировать',
+                label: (
+                  <Popconfirm
+                    title="Заблокировать пользователя?"
+                    onConfirm={() => blockHandler(record.id)}
+                    okText="Да"
+                    cancelText="Нет"
+                  >
+                    <div
+                      style={{ width: '100%' }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Заблокировать
+                    </div>
+                  </Popconfirm>
+                ),
                 key: 'block',
-                onClick: () => handleBlock(record.id),
+                danger: true,
                 disabled: isFetching,
               },
           {
@@ -254,15 +279,30 @@ const UsersPage = () => {
             key: 'roles',
           },
           {
-            label: 'Удалить',
+            label: (
+              <Popconfirm
+                title="Удалить пользователя?"
+                onConfirm={() => deleteHandler(record.id)}
+                okText="Да"
+                cancelText="Нет"
+              >
+                <div
+                  style={{ width: '100%' }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Удалить
+                </div>
+              </Popconfirm>
+            ),
             key: 'delete',
             danger: true,
+            // onClick: () => deleteHandler(record.id),
           },
         ];
 
         return (
           <Space>
-            <Button onClick={() => handleEdit(record.id)}>Ред</Button>
+            <Button onClick={() => editHandler(record.id)}>Ред</Button>
             <Dropdown menu={{ items }}>
               <Button icon={<EllipsisOutlined />} />
             </Dropdown>
