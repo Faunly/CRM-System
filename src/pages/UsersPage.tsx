@@ -9,15 +9,62 @@ import {
   Button,
   Input,
   GetProps,
+  Dropdown,
 } from 'antd';
 import { getUsersData } from '../api/admin';
 import { useEffect, useRef, useState } from 'react';
 import { ProfileDataType, Role, UsersMeta } from '../types/profile';
 import dayjs from 'dayjs';
 type SearchProps = GetProps<typeof Input.Search>;
+import type { MenuProps } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
+
+const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  console.log('Переход на страницу пользователя', e);
+};
+
+const handleMenuClick: MenuProps['onClick'] = (e) => {
+  switch (e.key) {
+    case 'block':
+      console.log(1);
+      break;
+
+    default:
+      console.log("err");
+  }
+};
+
+// const handleBlockUser = async () => {
+//   try {
+//     const response = await blockUser(id)
+//   } catch (error) {
+    
+//   }
+// }
+
+const items: MenuProps['items'] = [
+  {
+    label: 'За(раз)блокировать',
+    key: 'block',
+  },
+  {
+    label: 'Изменить роли',
+    key: 'roles',
+  },
+  {
+    label: 'Удалить',
+    key: 'delete',
+    danger: true,
+  },
+];
+
+const menuProps = {
+  items,
+  onClick: handleMenuClick,
+};
 
 const columns: TableProps['columns'] = [
   {
@@ -25,6 +72,8 @@ const columns: TableProps['columns'] = [
     dataIndex: 'username',
     key: 'username',
     sorter: true,
+    fixed: true,
+    render: (name) => {<a onClick={() => console.log(name)}>name</a>}
   },
   {
     title: 'Email',
@@ -64,18 +113,18 @@ const columns: TableProps['columns'] = [
     ),
   },
   {
-    title: 'Блокировка',
+    title: 'Заблокирован?',
     dataIndex: 'isBlocked',
     key: 'isBlocked',
-    render: (isBlock) => <Text>{isBlock ? 'да' : 'нет'}</Text>,
+    render: (isBlocked) => <Text>{isBlocked ? 'да' : 'нет'}</Text>,
     filterMultiple: false,
     filters: [
       {
-        text: '+',
+        text: 'Заблокированые',
         value: true,
       },
       {
-        text: '-',
+        text: 'Разблокированые',
         value: false,
       },
     ],
@@ -92,10 +141,13 @@ const columns: TableProps['columns'] = [
   },
   {
     title: 'Действия',
-    key: 'action',
+    key: 'actions',
     render: () => (
       <Space>
-        <Button>Заблокировать</Button>
+        <Button onClick={handleButtonClick}>Редактировать</Button>
+        <Dropdown menu={menuProps}>
+          <Button icon={<EllipsisOutlined />} />
+        </Dropdown>
       </Space>
     ),
   },
@@ -226,7 +278,7 @@ const UsersPage = () => {
           columns={columns}
           dataSource={usersData}
           onChange={onChangeTable}
-          scroll={{ y: '80vh', x: '100ww' }}
+          scroll={{ y: '75vh', x: '100ww' }}
           size="middle"
           pagination={
             (usersMeta?.totalAmount ?? 0) > 20

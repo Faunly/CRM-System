@@ -39,7 +39,7 @@ instanceAxios.interceptors.response.use(
 
         return instanceAxios(error.config);
       } catch (refreshError) {
-        console.log('error refresh');
+        console.error('error refresh');
         forceLogout();
         return Promise.reject(refreshError);
       }
@@ -54,18 +54,29 @@ export const getUsersData = async (params: {
   isBloked: boolean;
   sortOrder: string;
   sortBy: string;
-  search: string
+  search: string;
 }) => {
   try {
-    console.log(params);
     const response = await instanceAxios.get<UsersData>('', {
       params,
     });
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log(error.response?.data);
+      console.error(error.response?.data);
       throw Error('Ошибка получение данных');
+    }
+    throw new Error('Неизвестная ошибка');
+  }
+};
+
+export const blockUser = async (id: number) => {
+  try {
+    await instanceAxios.post(`${id}/block`);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(error.response?.data);
+      throw Error('Ошибка блокировки пользователя');
     }
     throw new Error('Неизвестная ошибка');
   }
