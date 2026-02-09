@@ -22,6 +22,8 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { useAuthActions } from '../store/hooks/useAuthActions';
 import { selectIsFetching } from '../store/selectors/uiSelectors';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { ColumnsType } from 'antd/es/table';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -32,6 +34,8 @@ const UsersPage = () => {
 
   const isFetching = useSelector(selectIsFetching);
   const { setIsFetching } = useAuthActions();
+
+  const navigate = useNavigate();
 
   const [pageMeta, setPageMeta] = useState<{
     currentPage: number;
@@ -90,7 +94,7 @@ const UsersPage = () => {
     pageMeta.searchQuery,
   ]);
 
-  const onChangeTable: TableProps['onChange'] = (
+  const onChangeTable: TableProps<ProfileDataType>['onChange'] = (
     pagination,
     filters,
     sorter,
@@ -166,11 +170,12 @@ const UsersPage = () => {
     }
   };
 
-  const editHandler = (id: number) => {
-    console.log('Редактировать', id);
+  const editHandler = (record: ProfileDataType) => {
+    console.log('Редактировать', record);
+    navigate('/user', { state: record });
   };
 
-  const columns: TableProps['columns'] = [
+  const columns: ColumnsType<ProfileDataType> = [
     {
       title: 'Имя',
       dataIndex: 'username',
@@ -296,13 +301,12 @@ const UsersPage = () => {
             ),
             key: 'delete',
             danger: true,
-            // onClick: () => deleteHandler(record.id),
           },
         ];
 
         return (
           <Space>
-            <Button onClick={() => editHandler(record.id)}>Ред</Button>
+            <Button onClick={() => editHandler(record)}>Ред</Button>
             <Dropdown menu={{ items }}>
               <Button icon={<EllipsisOutlined />} />
             </Dropdown>
@@ -332,6 +336,7 @@ const UsersPage = () => {
           onChange={onChangeTable}
           scroll={{ y: '75vh', x: '100ww' }}
           size="middle"
+          rowKey="id"
           pagination={
             (usersMeta?.totalAmount ?? 0) > 20
               ? {
