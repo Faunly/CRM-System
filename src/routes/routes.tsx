@@ -26,8 +26,8 @@ export const router = createBrowserRouter([
       { index: true, element: <TodoList /> },
       { path: 'todo', element: <TodoList /> },
       { path: 'profile', element: <Profile /> },
-      { path: 'users', element: <UsersPage />},
-      { path: 'user', element: <UserProfilePage/>}
+      { path: 'users', element: <UsersPage /> },
+      { path: 'users/:id', element: <UserProfilePage /> },
     ],
   },
 ]);

@@ -172,7 +172,7 @@ const UsersPage = () => {
 
   const editHandler = (record: ProfileDataType) => {
     console.log('Редактировать', record);
-    navigate('/user', { state: record });
+    navigate(`/users/:${record.id}`, { state: record });
   };
 
   const columns: ColumnsType<ProfileDataType> = [

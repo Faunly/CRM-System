@@ -105,3 +105,27 @@ export const deleteUser = async (id: number) => {
     throw new Error('Неизвестная ошибка');
   }
 };
+
+export const updateUserData = async (
+  id: number,
+  values: {
+    email: string;
+    phoneNumber: string;
+    username: string;
+  },
+) => {
+  try {
+    const response = await instanceAxios.put(`${id}`, {
+      email: values.email,
+      phoneNumber: values.phoneNumber,
+      username: values.username,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.data);
+      throw error;
+    }
+    throw new Error('Неизвестная ошибка');
+  }
+};
