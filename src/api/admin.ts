@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getAccessToken } from '../util/tokenManager';
 import { updateAccessToken } from './auth';
 import { forceLogout } from '../util/auth';
-import { UsersData } from '../types/profile';
+import { Role, UsersData } from '../types/profile';
 
 const instanceAxios = axios.create({
   baseURL: 'https://easydev.club/api/v1/admin/users',
@@ -119,6 +119,21 @@ export const updateUserData = async (
       email: values.email,
       phoneNumber: values.phoneNumber,
       username: values.username,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.data);
+      throw error;
+    }
+    throw new Error('Неизвестная ошибка');
+  }
+};
+
+export const updateUserRoles = async (id: number, roles: Role[] | null) => {
+  try {
+    const response = await instanceAxios.post(`${id}/rights`, {
+      roles,
     });
     return response;
   } catch (error) {

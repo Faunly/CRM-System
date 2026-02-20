@@ -11,8 +11,17 @@ import {
   GetProps,
   Dropdown,
   Popconfirm,
+  Modal,
+  Select,
+  message,
 } from 'antd';
-import { blockUser, deleteUser, getUsersData, unblockUser } from '../api/admin';
+import {
+  blockUser,
+  deleteUser,
+  getUsersData,
+  unblockUser,
+  updateUserRoles,
+} from '../api/admin';
 import { useEffect, useRef, useState } from 'react';
 import { ProfileDataType, Role, UsersMeta } from '../types/profile';
 import dayjs from 'dayjs';
@@ -24,6 +33,8 @@ import { selectIsFetching } from '../store/selectors/uiSelectors';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { ColumnsType } from 'antd/es/table';
+import axios from 'axios';
+import { NoticeType } from 'antd/es/message/interface';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -31,6 +42,9 @@ const { Title, Text } = Typography;
 const UsersPage = () => {
   const [usersData, setUsersData] = useState<ProfileDataType[]>([]);
   const [usersMeta, setUsersMeta] = useState<UsersMeta>();
+  const [isRolesModalOpen, setIsRolesModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<number | null>(null);
+  const [tempRoles, setTempRoles] = useState<Role[] | null>(null);
 
   const isFetching = useSelector(selectIsFetching);
   const { setIsFetching } = useAuthActions();
@@ -52,6 +66,16 @@ const UsersPage = () => {
     sortOrder: null,
     searchQuery: null,
   });
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const showMessage = (type: NoticeType, content: string) => {
+    messageApi.open({
+      type,
+      content,
+      duration: 5,
+    });
+  };
 
   const loadDataHandler = async () => {
     try {
@@ -145,6 +169,12 @@ const UsersPage = () => {
       setIsFetching(true);
       await blockUser(id);
       loadDataHandler();
+    } catch (error) {
+      const messageText = axios.isAxiosError(error)
+        ? error.response?.data || error.message
+        : 'Произошла неизвестная ошибка';
+
+      showMessage('error', `Ошибка: ${messageText}`);
     } finally {
       setIsFetching(false);
     }
@@ -155,6 +185,12 @@ const UsersPage = () => {
       setIsFetching(true);
       await unblockUser(id);
       loadDataHandler();
+    } catch (error) {
+      const messageText = axios.isAxiosError(error)
+        ? error.response?.data || error.message
+        : 'Произошла неизвестная ошибка';
+
+      showMessage('error', `Ошибка: ${messageText}`);
     } finally {
       setIsFetching(false);
     }
@@ -165,6 +201,12 @@ const UsersPage = () => {
       setIsFetching(true);
       await deleteUser(id);
       loadDataHandler();
+    } catch (error) {
+      const messageText = axios.isAxiosError(error)
+        ? error.response?.data || error.message
+        : 'Произошла неизвестная ошибка';
+
+      showMessage('error', `Ошибка: ${messageText}`);
     } finally {
       setIsFetching(false);
     }
@@ -175,6 +217,24 @@ const UsersPage = () => {
     navigate(`/users/:${record.id}`, { state: record });
   };
 
+  const saveRolesHandler = async (id: number) => {
+    console.log(id);
+    console.log(tempRoles);
+    try {
+      setIsFetching(true);
+      await updateUserRoles(id, tempRoles);
+      loadDataHandler();
+    } catch (error) {
+      const messageText = axios.isAxiosError(error)
+        ? error.response?.data || error.message
+        : 'Произошла неизвестная ошибка';
+
+      showMessage('error', `Ошибка: ${messageText}`);
+    } finally {
+      setIsFetching(false);
+      setIsRolesModalOpen(false);
+    }
+  };
   const columns: ColumnsType<ProfileDataType> = [
     {
       title: 'Имя',
@@ -282,6 +342,11 @@ const UsersPage = () => {
           {
             label: 'Изменить роли',
             key: 'roles',
+            onClick: () => {
+              setIsRolesModalOpen(true);
+              setSelectedUser(record.id);
+              setTempRoles(record.roles);
+            },
           },
           {
             label: (
@@ -318,9 +383,40 @@ const UsersPage = () => {
 
   return (
     <Flex vertical style={{ maxWidth: '90%' }}>
+      {contextHolder}
       <Header style={{ backgroundColor: 'transparent', height: 'unset' }}>
         <Title>Пользователи</Title>
       </Header>
+
+      <Modal
+        title={`Изменение ролей: ${selectedUser}`}
+        open={isRolesModalOpen}
+        onOk={() => {
+          if (selectedUser) {
+            saveRolesHandler(selectedUser);
+          }
+        }}
+        onCancel={() => setIsRolesModalOpen(false)}
+        okText="Сохранить"
+        cancelText="Отмена"
+      >
+        <div style={{ marginTop: 16 }}>
+          <Text type="secondary">Выберите роли для пользователя:</Text>
+          <Select
+            mode="multiple"
+            style={{ width: '100%', marginTop: 8 }}
+            placeholder="Выберите роли"
+            value={tempRoles}
+            onChange={(values) => setTempRoles(values)}
+            disabled={isFetching}
+            options={[
+              { value: 'ADMIN', label: 'Администратор' },
+              { value: 'USER', label: 'Пользователь' },
+              { value: 'MODERATOR', label: 'Модератор' },
+            ]}
+          />
+        </div>
+      </Modal>
 
       <Content style={{ padding: '0 3rem' }}>
         <Flex justify="end">
