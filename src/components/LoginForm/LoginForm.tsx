@@ -16,7 +16,7 @@ import { loginUser } from '../../api/auth';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { useAuthActions } from '../../store/hooks/useAuthActions';
-import { selectIsFetching } from '../../store/selectors/uiSelectors';
+import { selectIsFetching } from '../../store/selectors/authSelectors';
 import { NoticeType } from 'antd/es/message/interface';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
@@ -86,6 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
             initialValues={{ remember: true }}
             onFinish={onFinish}
             autoComplete="off"
+            disabled={isFetching}
           >
             <Form.Item<FieldType>
               name="login"
@@ -124,11 +125,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
             </Form.Item>
 
             <Form.Item<FieldType> label={null}>
-              <Button
-                htmlType="submit"
-                className={classes.button}
-                disabled={isFetching}
-              >
+              <Button htmlType="submit" className={classes.button}>
                 Войти
               </Button>
             </Form.Item>

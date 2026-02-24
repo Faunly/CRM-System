@@ -3,12 +3,12 @@ import { createBrowserRouter } from 'react-router';
 import Profile from '../pages/ProfilePage';
 import TodoList from '../pages/TodoListPage';
 import AuthPage from '../pages/AuthPage';
-import MainLayout from '../layouts/MainLayout';
 import AuthLayout from '../layouts/AuthLayout';
 
 import { accessTokenLoader } from '../util/tokenManager';
 import UsersPage from '../pages/UsersPage';
 import { UserProfilePage } from '../pages/UserProfilePage';
+import ProtectedRoutes from '../util/ProtectedRoutes';
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <MainLayout />,
+    element: <ProtectedRoutes />,
     loader: accessTokenLoader,
     children: [
       { index: true, element: <TodoList /> },

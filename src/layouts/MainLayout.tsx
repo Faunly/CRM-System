@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 import type { MenuProps } from 'antd';
 import { Layout, Menu } from 'antd';
 import {
@@ -6,8 +6,6 @@ import {
   UserOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
-
-import { selectIsAuth } from '../store/selectors/uiSelectors';
 
 type MenuItem = Required<MenuProps>['items'][number];
 const { Sider } = Layout;
@@ -21,10 +19,7 @@ const MainLayout = () => {
       key: '/todo',
       icon: <ContainerOutlined />,
       label: 'Todo-List',
-      onClick: () => {
-        navigate('/todo');
-        console.log(location.pathname);
-      },
+      onClick: () => navigate('/todo'),
     },
     {
       key: '/profile',
@@ -39,10 +34,6 @@ const MainLayout = () => {
       onClick: () => navigate('/users'),
     },
   ];
-
-  if (!selectIsAuth) {
-    return <Navigate to="/login" replace />;
-  }
 
   return (
     <Layout hasSider style={{ height: '100vh' }}>

@@ -29,7 +29,7 @@ type SearchProps = GetProps<typeof Input.Search>;
 import type { MenuProps } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { useAuthActions } from '../store/hooks/useAuthActions';
-import { selectIsFetching } from '../store/selectors/uiSelectors';
+import { selectIsFetching } from '../store/selectors/authSelectors';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { ColumnsType } from 'antd/es/table';
@@ -317,7 +317,6 @@ const UsersPage = () => {
                 label: 'Разблокировать',
                 key: 'unblock',
                 onClick: () => unblockHandler(record.id),
-                disabled: isFetching,
               }
             : {
                 label: (
@@ -337,7 +336,6 @@ const UsersPage = () => {
                 ),
                 key: 'block',
                 danger: true,
-                disabled: isFetching,
               },
           {
             label: 'Изменить роли',
@@ -372,7 +370,7 @@ const UsersPage = () => {
         return (
           <Space>
             <Button onClick={() => editHandler(record)}>Ред</Button>
-            <Dropdown menu={{ items }}>
+            <Dropdown disabled={isFetching} menu={{ items }}>
               <Button icon={<EllipsisOutlined />} />
             </Dropdown>
           </Space>
