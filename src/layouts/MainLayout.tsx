@@ -6,6 +6,9 @@ import {
   UserOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
+import { ProfileDataType } from '../types/profile';
+import { getProfileData } from '../api/user';
 
 type MenuItem = Required<MenuProps>['items'][number];
 const { Sider } = Layout;
@@ -13,6 +16,24 @@ const { Sider } = Layout;
 const MainLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [profileData, setProfileData] = useState<ProfileDataType | null>(null);
+
+  useEffect(() => {
+    getProfileDataHandler();
+  }, []);
+
+  const getProfileDataHandler = async () => {
+    try {
+      const data = await getProfileData();
+      setProfileData(data);
+    } catch {
+      throw new Error('Ошибка получения данных!');
+    }
+  };
+
+  const isAdmin =
+    profileData?.roles.includes('ADMIN') ||
+    profileData?.roles.includes('MODERATOR');
 
   const itemsSider: MenuItem[] = [
     {
@@ -27,12 +48,16 @@ const MainLayout = () => {
       label: 'Профиль',
       onClick: () => navigate('/profile'),
     },
-    {
-      key: '/users',
-      icon: <UsergroupAddOutlined />,
-      label: 'Пользователи',
-      onClick: () => navigate('/users'),
-    },
+    ...(isAdmin
+      ? [
+          {
+            key: '/users',
+            icon: <UsergroupAddOutlined />,
+            label: 'Пользователи',
+            onClick: () => navigate('/users'),
+          },
+        ]
+      : []),
   ];
 
   return (

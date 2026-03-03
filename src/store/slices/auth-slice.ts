@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = { isFetching: false, isAuth: false, isInit: false };
+const initialState = {
+  isAdmin: false,
+  isFetching: false,
+  isAuth: false,
+  isInit: false,
+};
 
 const authSlice = createSlice({
   name: 'auth',
@@ -11,10 +16,13 @@ const authSlice = createSlice({
     },
     setIsAuth(state, action) {
       state.isAuth = action.payload;
-      state.isInit = true
+      state.isInit = true;
     },
     setIsInit(state, action) {
-      state.isInit = action.payload
+      state.isInit = action.payload;
+    },
+    setIsAdmin(state, action) {
+      state.isAdmin = action.payload;
     },
   },
 });
