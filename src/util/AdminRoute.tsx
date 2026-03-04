@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router';
 
-const ProtectedRoutes = () => {
+const AdminRoute = () => {
   return <Outlet />;
 };
 
-export default ProtectedRoutes;
+export default AdminRoute;

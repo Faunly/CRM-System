@@ -35,7 +35,7 @@ instanceAxios.interceptors.response.use(
         await updateAccessToken();
         const accessToken = getAccessToken();
 
-        originalRequest.headers.Authorization = accessToken;
+        originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
 
         return instanceAxios(error.config);
       } catch (refreshError) {

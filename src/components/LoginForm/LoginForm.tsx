@@ -15,9 +15,13 @@ import { AxiosError } from 'axios';
 import { loginUser } from '../../api/auth';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
-import { useAuthActions } from '../../store/hooks/useAuthActions';
+import {
+  initializeApp,
+  useAuthActions,
+} from '../../store/hooks/useAuthActions';
 import { selectIsFetching } from '../../store/selectors/authSelectors';
 import { NoticeType } from 'antd/es/message/interface';
+import { useAppDispatch } from '../../store';
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -39,6 +43,7 @@ const MIN_LENGHT_LOGIN = 2;
 const MIN_LENGHT_PASS = 6;
 
 const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
+  const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const { setIsAuth, setIsFetching } = useAuthActions();
   const navigate = useNavigate();
@@ -52,8 +57,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
       form.resetFields(['login', 'password', 'remember']);
       console.log('login success');
       console.log(response);
+      await dispatch(initializeApp());
       showMessage('success', 'Вы успешно авторизовались!');
       setIsAuth(true);
+      localStorage.setItem('isLoggedIn', 'true');
       navigate('/todo');
     } catch (error) {
       const axiosError = error as AxiosError<string>;

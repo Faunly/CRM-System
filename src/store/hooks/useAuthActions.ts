@@ -1,14 +1,22 @@
 import { useDispatch } from 'react-redux';
 import { authActions } from '../slices/auth-slice';
-import { updateAccessToken } from '../../api/auth';
 import { AppDispatch } from '..';
+import { getProfileData } from '../../api/user';
 
 export const initializeApp = () => async (dispatch: AppDispatch) => {
   try {
-    await updateAccessToken();
+    const user = await getProfileData();
+
+    const roles = user?.roles || [];
+    const isAdmin = roles.includes('ADMIN') || roles.includes('MODERATOR');
+    console.log('INIT');
+    console.log('ISADMIN: ', isAdmin);
+
+    dispatch(authActions.setIsAdmin(isAdmin));
     dispatch(authActions.setIsAuth(true));
   } catch {
     dispatch(authActions.setIsAuth(false));
+    dispatch(authActions.setIsAdmin(false));
   } finally {
     dispatch(authActions.setIsInit(true));
   }
