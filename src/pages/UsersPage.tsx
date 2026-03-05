@@ -35,13 +35,11 @@ import { useNavigate } from 'react-router';
 import { ColumnsType } from 'antd/es/table';
 import axios from 'axios';
 import { NoticeType } from 'antd/es/message/interface';
-import store from '../store';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 
 const UsersPage = () => {
-  const state = store.getState();
   const [usersData, setUsersData] = useState<ProfileDataType[]>([]);
   const [usersMeta, setUsersMeta] = useState<UsersMeta>();
   const [isRolesModalOpen, setIsRolesModalOpen] = useState(false);

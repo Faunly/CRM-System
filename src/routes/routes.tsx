@@ -7,11 +7,9 @@ import AuthLayout from '../layouts/AuthLayout';
 
 import UsersPage from '../pages/UsersPage';
 import { UserProfilePage } from '../pages/UserProfilePage';
-import ProtectedRoutes from '../util/ProtectedRoutes';
 import store from '../store';
 import { initializeApp } from '../store/hooks/useAuthActions';
 import MainLayout from '../layouts/MainLayout';
-import AdminRoute from '../util/AdminRoute';
 
 export const protectedLoader = async () => {
   if (!localStorage.getItem('isLoggedIn')) {
@@ -54,13 +52,11 @@ export const router = createBrowserRouter([
     loader: protectedLoader,
     children: [
       {
-        element: <ProtectedRoutes />,
         children: [
           { index: true, element: <TodoList /> },
           { path: 'todo', element: <TodoList /> },
           { path: 'profile', element: <Profile /> },
           {
-            element: <AdminRoute />,
             loader: adminLoader,
             children: [
               { path: 'users', element: <UsersPage /> },
