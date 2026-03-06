@@ -409,8 +409,8 @@ const UsersPage = () => {
             onChange={(values) => setTempRoles(values)}
             disabled={isFetching}
             options={[
+              { value: 'USER', label: 'Пользователь', disabled: true },
               { value: 'ADMIN', label: 'Администратор' },
-              { value: 'USER', label: 'Пользователь' },
               { value: 'MODERATOR', label: 'Модератор' },
             ]}
           />

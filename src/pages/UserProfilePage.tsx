@@ -109,16 +109,7 @@ export const UserProfilePage = () => {
           {isEdit ? <Input /> : <Text>{profileData.email}</Text>}
         </Form.Item>
 
-        <Form.Item<FieldType>
-          name="phoneNumber"
-          label="Телефон"
-          rules={[
-            {
-              required: true,
-              message: 'Пожалуйста, введите номер телефона!',
-            },
-          ]}
-        >
+        <Form.Item<FieldType> name="phoneNumber" label="Телефон">
           {isEdit ? <Input /> : <Text>{profileData.phoneNumber}</Text>}
         </Form.Item>
 
