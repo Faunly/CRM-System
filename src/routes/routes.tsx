@@ -31,6 +31,8 @@ export const protectedLoader = async () => {
 };
 
 export const adminLoader = async () => {
+  // TODO: тут проблема что этот лоадер срабатывает раньше инициализации приложения.
+  // Т.е то что пользователь админ определяется уже после того как лоадер выкинул со страницы на туду.
   const state = store.getState();
 
   if (!state.auth.isAdmin) {

@@ -47,6 +47,7 @@ export const UserProfilePage = () => {
       setIsLoading(true);
       const response = await updateUserData(profileData.id, values);
       setProfileData(response.data);
+      form.resetFields();
     } catch (error) {
       const axiosError = error as AxiosError<string>;
 
@@ -79,38 +80,32 @@ export const UserProfilePage = () => {
         name="userData"
         layout="vertical"
         autoComplete="off"
-        initialValues={profileData}
+        // initialValues={profileData}
         onFinish={handleSave}
         disabled={loading}
       >
-        <Form.Item<FieldType>
-          name="username"
-          label="Имя"
-          rules={[
-            {
-              required: true,
-              message: 'Пожалуйста, введите имя пользователя!',
-            },
-          ]}
-        >
-          {isEdit ? <Input /> : <Text>{profileData.username}</Text>}
+        <Form.Item<FieldType> name="username" label="Имя">
+          {isEdit ? (
+            <Input placeholder={profileData.username} />
+          ) : (
+            <Text>{profileData.username}</Text>
+          )}
         </Form.Item>
 
-        <Form.Item<FieldType>
-          name="email"
-          label="Почта"
-          rules={[
-            {
-              required: true,
-              message: 'Пожалуйста, введите почту!',
-            },
-          ]}
-        >
-          {isEdit ? <Input /> : <Text>{profileData.email}</Text>}
+        <Form.Item<FieldType> name="email" label="Почта">
+          {isEdit ? (
+            <Input placeholder={profileData.email} />
+          ) : (
+            <Text>{profileData.email}</Text>
+          )}
         </Form.Item>
 
         <Form.Item<FieldType> name="phoneNumber" label="Телефон">
-          {isEdit ? <Input /> : <Text>{profileData.phoneNumber}</Text>}
+          {isEdit ? (
+            <Input placeholder={profileData.phoneNumber} />
+          ) : (
+            <Text>{profileData.phoneNumber}</Text>
+          )}
         </Form.Item>
 
         <Form.Item>
