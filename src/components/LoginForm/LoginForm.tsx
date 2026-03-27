@@ -53,10 +53,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ showMessage }) => {
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     try {
       setIsFetching(true);
-      const response = await loginUser(values);
+      await loginUser(values);
       form.resetFields(['login', 'password', 'remember']);
       console.log('login success');
-      console.log(response);
       await dispatch(initializeApp());
       showMessage('success', 'Вы успешно авторизовались!');
       setIsAuth(true);

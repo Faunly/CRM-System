@@ -41,7 +41,6 @@ export const loginUser = async (data: LoginTypes) => {
     const refreshToken = response?.data.refreshToken;
 
     setRefreshToken(refreshToken);
-    console.log(accessToken);
     setAccessToken(accessToken);
 
     return response;
@@ -80,8 +79,6 @@ export const updateAccessToken = async () => {
 
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
-
-    console.log('Access Token update successfully!', ':', accessToken);
 
     return response?.data;
   } catch (error) {

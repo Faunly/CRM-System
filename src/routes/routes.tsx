@@ -11,16 +11,29 @@ import store from '../store';
 import { initializeApp } from '../store/hooks/useAuthActions';
 import MainLayout from '../layouts/MainLayout';
 
+let initPromise: Promise<any> | null = null;
+
+const ensureAppInitialized = async () => {
+  if (initPromise) return initPromise;
+
+  const state = store.getState();
+  if (!state.auth.isInit) {
+    initPromise = store.dispatch(initializeApp()).then(() => {
+      initPromise = null;
+      return store.getState();
+    });
+    return initPromise;
+  }
+
+  return state;
+};
+
 export const protectedLoader = async () => {
   if (!localStorage.getItem('isLoggedIn')) {
     throw redirect('/login');
   }
 
-  let state = store.getState();
-  if (!state.auth.isInit) {
-    await store.dispatch(initializeApp());
-    state = store.getState();
-  }
+  const state = await ensureAppInitialized();
 
   if (!state.auth.isAuth) {
     console.log('User is not authenticated in Redux');
@@ -33,7 +46,11 @@ export const protectedLoader = async () => {
 export const adminLoader = async () => {
   // TODO: тут проблема что этот лоадер срабатывает раньше инициализации приложения.
   // Т.е то что пользователь админ определяется уже после того как лоадер выкинул со страницы на туду.
-  const state = store.getState();
+  const state = await ensureAppInitialized();
+
+  if (!state.auth.isAuth) {
+    throw redirect('/login');
+  }
 
   if (!state.auth.isAdmin) {
     throw redirect('/todo');

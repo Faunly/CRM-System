@@ -9,8 +9,6 @@ export const initializeApp = () => async (dispatch: AppDispatch) => {
 
     const roles = user?.roles || [];
     const isAdmin = roles.includes('ADMIN') || roles.includes('MODERATOR');
-    console.log('INIT');
-    console.log('ISADMIN: ', isAdmin);
 
     dispatch(authActions.setIsAdmin(isAdmin));
     dispatch(authActions.setIsAuth(true));

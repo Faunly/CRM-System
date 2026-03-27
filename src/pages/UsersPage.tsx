@@ -219,8 +219,6 @@ const UsersPage = () => {
   };
 
   const saveRolesHandler = async (id: number) => {
-    console.log(id);
-    console.log(tempRoles);
     try {
       setIsFetching(true);
       await updateUserRoles(id, tempRoles);
