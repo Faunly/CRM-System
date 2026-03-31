@@ -26,6 +26,7 @@ const Profile = () => {
     try {
       logoutUser();
       setIsAuth(false);
+      localStorage.removeItem('isLoggedIn');
       navigate('/login');
     } catch {
       throw new Error('Ошибка завершения сессии!');

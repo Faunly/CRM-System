@@ -80,8 +80,6 @@ export const updateAccessToken = async () => {
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
 
-    console.log('Access Token update successfully!');
-
     return response?.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
